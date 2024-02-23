@@ -1,0 +1,15 @@
+const String entrar = 'Entrar';
+const String senha = 'Senha';
+const String email = 'E-mail';
+const String saldo = 'Saldo';
+const String movimentacoes = 'Movimentações';
+const String rendimentos = ' Rendimentos este mês';
+const String sair = 'Sair';
+const String stema = 'Tema';
+const String reload = 'Atualizar';
+const String aplicar = 'Aplicar';
+const String resgatar = 'Resgatar';
+const String valor = 'Valor';
+const String min_aplicacao = 'Aplicação/Resgates mínimos são de R\$ 2,00';
+const String error_inesp = 'Erro inesperado';
+const String com_a_bb = 'Com a ByeBnk é simples assim!';
