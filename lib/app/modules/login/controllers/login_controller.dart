@@ -23,10 +23,21 @@ class LoginController extends GetxController {
           snackPosition: SnackPosition.TOP);
     }
     if (VerifyError.verify(data)) {
+      print(data);
       Get.snackbar('Login Failed', data.errors,
           snackPosition: SnackPosition.TOP);
     } else {
       Get.toNamed(Routes.HOME);
+    }
+  }
+
+  logout() async {
+    var data = await this.auth?.logout();
+    if (data == null) {
+      Get.snackbar('Login Failed', 'Unexpected Error',
+          snackPosition: SnackPosition.TOP);
+    } else {
+      Get.toNamed(Routes.LOGIN);
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/app/modules/home/bindings/home_binding.dart';
 import 'package:jantung_app/app/modules/home/views/home_view.dart';
@@ -17,6 +18,9 @@ class NavigationController extends GetxController
   late CurvedAnimation fabCurve;
   late CurvedAnimation borderRadiusCurve;
   late AnimationController hideBottomBarAnimationController;
+
+  var selectedDate = DateTime.now().obs;
+
   @override
   void onInit() {
     this.auth = Get.find<AuthService>();
@@ -98,5 +102,37 @@ class NavigationController extends GetxController
   @override
   void onClose() {
     super.onClose();
+  }
+
+  chooseDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: Get.context!,
+      initialDate: selectedDate.value,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2030),
+      //initialEntryMode: DatePickerEntryMode.input,
+      // initialDatePickerMode: DatePickerMode.year,
+      helpText: 'Date of Birth',
+      cancelText: 'Close',
+      confirmText: 'Confirm',
+      errorFormatText: 'Enter valid date',
+      errorInvalidText: 'Enter valid date range',
+      fieldLabelText: 'DOB',
+      fieldHintText: 'Month/Date/Year',
+    );
+    if (pickedDate != null && pickedDate != selectedDate.value) {
+      selectedDate.value = pickedDate;
+    }
+  }
+
+  dateOutput() {
+    var now = DateFormat("dd-MM-yyyy").format(DateTime.now()).toString();
+    var selected =
+        DateFormat("dd-MM-yyyy").format(selectedDate.value).toString();
+    if (now != selected) {
+      return DateFormat("dd-MM-yyyy").format(selectedDate.value).toString();
+    } else {
+      return "Choose Date Of Birth";
+    }
   }
 }

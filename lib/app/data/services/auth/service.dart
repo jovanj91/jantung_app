@@ -16,7 +16,7 @@ class AuthService extends GetxService {
   AuthRepository? repository;
   final user = User().obs;
   final box = GetStorage();
-  static const String _jwtKey = 'jwt_token';
+  static const String _jwtKey = 'Authentication-Token';
 
   Future<void> storeJwtToken(String token) async {
     box.write(_jwtKey, token);
@@ -49,8 +49,9 @@ class AuthService extends GetxService {
     return data;
   }
 
-  logout() {
+  logout() async {
+    var data = await repository?.logout();
     clearJwtToken();
-    Get.offAllNamed(Routes.LOGIN);
+    return data;
   }
 }

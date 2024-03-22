@@ -6,4 +6,5 @@ class AuthRepository {
   AuthRepository(this.api);
 
   login(email, password) => api.login(email, password);
+  logout() => api.logout();
 }

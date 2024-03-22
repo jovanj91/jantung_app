@@ -7,7 +7,7 @@ import 'package:jantung_app/app/data/models/app_error.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/app/data/services/preprocessing/service.dart';
 
-const baseUrl = 'http://192.168.1.40:8080';
+const baseUrl = 'http://192.168.100.89:8080';
 
 class MyApi extends GetConnect {
   login(email, password) async {
@@ -24,18 +24,27 @@ class MyApi extends GetConnect {
         return res;
       },
     );
-
-    if (response.statusCode == 201) {
+    print(response.body);
+    if (response.statusCode == 200) {
       auth.user.update((val) {
         val?.useremail = email;
         val?.password = password;
       });
-      auth.jwtToken.value = response.body['token'];
+      // auth.jwtToken.value = response.body['token'];
       return auth.user;
     } else if (response.statusCode == 500) {
       return AppError(errors: 'Unexpected Error');
     } else {
       return AppError(errors: 'Wrong Email or Password');
+    }
+  }
+
+  logout() async {
+    final response = await post('$baseUrl/logout', "text/html");
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      return response;
     }
   }
 

@@ -68,6 +68,21 @@ class LoginView extends GetView<LoginController> {
                               text: 'Login',
                               icon: Icons.login,
                             ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 24.0),
+                            width: SizeConfig.wp(30.0),
+                            child: DefaultButton(
+                              callback: () async {
+                                final FormState form = _formKey.currentState!;
+                                if (form.validate()) {
+                                  form.save();
+                                  await this.controller.logout();
+                                }
+                              },
+                              text: 'Logout',
+                              icon: Icons.logout,
+                            ),
                           )
                         ],
                       ),
