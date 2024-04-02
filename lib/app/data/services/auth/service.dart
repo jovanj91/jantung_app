@@ -12,7 +12,7 @@ class AuthService extends GetxService {
     return this;
   }
 
-  final jwtToken = ''.obs;
+  final token = ''.obs;
   AuthRepository? repository;
   final user = User().obs;
   final box = GetStorage();
@@ -32,7 +32,7 @@ class AuthService extends GetxService {
 
   bool checkForValidToken() {
     try {
-      if (JwtDecoder.isExpired(jwtToken.value)) {
+      if (JwtDecoder.isExpired(token.value)) {
         print('JWT Token has expired.');
         return false;
       }
@@ -45,7 +45,7 @@ class AuthService extends GetxService {
 
   login(email, password) async {
     var data = await repository?.login(email, password);
-    storeJwtToken(jwtToken.value);
+    storeJwtToken(token.value);
     return data;
   }
 

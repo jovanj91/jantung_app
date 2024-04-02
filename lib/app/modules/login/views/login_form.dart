@@ -24,6 +24,7 @@ class LoginForm extends StatelessWidget {
                 onChanged: (v) => this.controller.changeEmail(v),
                 onValidate: (v) => this.controller.validateEmail(v),
                 onSaved: (v) => this.controller.savedEmail(v),
+                initialValue: 'user1@user.com',
               ),
             ),
             Expanded(
@@ -48,6 +49,7 @@ class LoginForm extends StatelessWidget {
                     onChanged: (v) => this.controller.changePassword(v),
                     onValidate: (v) => this.controller.validatePassword(v),
                     onSaved: (v) => this.controller.savedPassword(v),
+                    initialValue: 'user123',
                   )),
             ),
             Expanded(

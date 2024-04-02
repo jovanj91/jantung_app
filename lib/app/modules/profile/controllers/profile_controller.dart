@@ -1,12 +1,26 @@
+import 'package:jantung_app/app/data/services/auth/service.dart';
+
+import 'package:jantung_app/routes/app_pages.dart';
 import 'package:get/get.dart';
 
 class ProfileController extends GetxController {
   //TODO: Implement ProfileController
+  AuthService? auth;
 
-  final count = 0.obs;
   @override
   void onInit() {
+    this.auth = Get.find<AuthService>();
     super.onInit();
+  }
+
+  logout() async {
+    var data = await this.auth?.logout();
+    if (data == null) {
+      Get.snackbar('Login Failed', 'Unexpected Error',
+          snackPosition: SnackPosition.TOP);
+    } else {
+      Get.offAllNamed(Routes.LOGIN);
+    }
   }
 
   @override
@@ -18,6 +32,4 @@ class ProfileController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

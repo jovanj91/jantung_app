@@ -12,39 +12,37 @@ const baseUrl = 'http://192.168.100.89:8080';
 class MyApi extends GetConnect {
   login(email, password) async {
     AuthService auth = Get.find<AuthService>();
-
-    final response = await post(
-      '$baseUrl/login',
-      json.encode({"email": email, "password": password}),
-      decoder: (res) {
-        // if (res['token'] != null && res['token'] != '') {
-        //    auth.token.value = res['token'];
-        // }
-
-        return res;
-      },
-    );
-    print(response.body);
-    if (response.statusCode == 200) {
-      auth.user.update((val) {
-        val?.useremail = email;
-        val?.password = password;
-      });
-      // auth.jwtToken.value = response.body['token'];
-      return auth.user;
-    } else if (response.statusCode == 500) {
+    try {
+      final response = await post(
+        '$baseUrl/login?include_auth_token',
+        json.encode({"email": email, "password": password}),
+      );
+      print(response.body);
+      if (response.isOk) {
+        final Map<String, dynamic> jsonResponse = response.body;
+        auth.token.value =
+            jsonResponse['response']['user']['authentication_token'];
+        auth.user.update((val) {
+          val?.useremail = email;
+          val?.password = password;
+        });
+        return response;
+      } else if (response.statusCode == 400) {
+        return AppError(errors: 'Wrong Password or Email');
+      } else {
+        return AppError(errors: 'Unexpected Error, please try again');
+      }
+    } catch (exception) {
       return AppError(errors: 'Unexpected Error');
-    } else {
-      return AppError(errors: 'Wrong Email or Password');
     }
   }
 
   logout() async {
-    final response = await post('$baseUrl/logout', "text/html");
-    print(response.body);
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await post('$baseUrl/logout', "text/html");
       return response;
+    } catch (e) {
+      return AppError(errors: 'Unexpected Error');
     }
   }
 
@@ -74,23 +72,22 @@ class MyApi extends GetConnect {
     http.Response response = await http.Response.fromStream(res);
   }
 
-  // Future<http.Response> authenticatedRequest(
-  //   String endpoint, {
-  //   Map<String, String>? headers,
-  //   dynamic body,
-  //   String method = 'GET',
-  // }) async {
-  //   final url = Uri.parse('$baseUrl/$endpoint');
-  //   if (method == 'GET') {
-  //     return http.get(url, headers: getHeaders());
-  //   } else if (method == 'POST') {
-  //     return http.post(url, headers: getHeaders(), body: body);
-  //   } else if (method == 'PUT') {
-  //     return http.put(url, headers: getHeaders(), body: body);
-  //   } else if (method == 'DELETE') {
-  //     return http.delete(url, headers: getHeaders());
-  //   } else {
-  //     throw Exception('Unsupported HTTP method');
-  //   }
-  // }
+  // Fetch Patient Data
+  Future getPatient() async {
+    AuthService auth = Get.find<AuthService>();
+    final Map<String, String> headers = {
+      'Authentication-Token': auth.token.value,
+      'Content-Type': 'application/json', // Example header
+    };
+    try {
+      final response = await get("$baseUrl/getPatientsData", headers: headers);
+      if (response.status.hasError) {
+        return AppError(errors: response.statusText);
+      } else {
+        return response.body['data'];
+      }
+    } catch (exception) {
+      return AppError(errors: exception.toString());
+    }
+  }
 }

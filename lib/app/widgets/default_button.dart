@@ -6,11 +6,13 @@ class DefaultButton extends Container {
   final String? text;
   final callback;
   final IconData? icon;
+  final Color? color;
   DefaultButton({
     super.key,
     this.text,
     this.callback,
     this.icon,
+    this.color = kPrimaryColor,
   });
 
   @override
@@ -21,7 +23,7 @@ class DefaultButton extends Container {
       child: ElevatedButton.icon(
           style: ButtonStyle(
               backgroundColor:
-                  MaterialStateColor.resolveWith((states) => kPrimaryColor),
+                  MaterialStateColor.resolveWith((states) => color!),
               shadowColor:
                   MaterialStateColor.resolveWith((states) => Colors.black),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(

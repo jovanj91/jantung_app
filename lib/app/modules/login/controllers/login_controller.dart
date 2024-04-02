@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:jantung_app/app/data/models/app_error.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/core/utils/get_errors.dart';
 import 'package:jantung_app/routes/app_pages.dart';
@@ -8,6 +9,7 @@ class LoginController extends GetxController {
 
   final isEmail = false.obs;
   final obscure = true.obs;
+  var processingLogin = false.obs;
 
   @override
   void onInit() {
@@ -16,30 +18,51 @@ class LoginController extends GetxController {
   }
 
   login() async {
-    var data = await this.auth?.login(
-        this.auth?.user.value.useremail, this.auth?.user.value.password);
-    if (data == null) {
-      Get.snackbar('Login Failed', 'Unexpected Error',
+    try {
+      processingLogin(true);
+      await this
+          .auth
+          ?.login(
+              this.auth?.user.value.useremail, this.auth?.user.value.password)
+          .then((response) {
+        print(response);
+        if (VerifyError.verify(response)) {
+          Get.snackbar('Login Failed', response.getError(),
+              snackPosition: SnackPosition.TOP);
+          processingLogin(false);
+        } else {
+          Get.offAllNamed(Routes.NAVIGATION);
+        }
+      }, onError: (err) {
+        processingLogin(false);
+        Get.snackbar('Login Failed', err.toString(),
+            snackPosition: SnackPosition.TOP);
+      });
+    } catch (e) {
+      processingLogin(false);
+      Get.snackbar('Login Failed', e.toString(),
           snackPosition: SnackPosition.TOP);
-    }
-    if (VerifyError.verify(data)) {
-      print(data);
-      Get.snackbar('Login Failed', data.errors,
-          snackPosition: SnackPosition.TOP);
-    } else {
-      Get.toNamed(Routes.HOME);
     }
   }
 
-  logout() async {
-    var data = await this.auth?.logout();
-    if (data == null) {
-      Get.snackbar('Login Failed', 'Unexpected Error',
-          snackPosition: SnackPosition.TOP);
-    } else {
-      Get.toNamed(Routes.LOGIN);
-    }
-  }
+  // login() async {
+  //   var data = await this.auth?.login(
+  //       this.auth?.user.value.useremail, this.auth?.user.value.password);
+  //   processingLogin(true);
+  //   if (data == null) {
+  //     Get.snackbar('Login Failed', 'Unexpected Error',
+  //         snackPosition: SnackPosition.TOP);
+  //     processingLogin(false);
+  //   }
+  //   if (VerifyError.verify(data)) {
+  //     processingLogin(false);
+  //     print(data);
+  //     Get.snackbar('Login Failed', data.errors,
+  //         snackPosition: SnackPosition.TOP);
+  //   } else {
+  //     Get.offAllNamed(Routes.NAVIGATION);
+  //   }
+  // }
 
   showPass() => this.obscure.value = !this.obscure.value;
   changeEmail(v) {

@@ -1,38 +1,76 @@
-import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:jantung_app/app/data/services/patient/service.dart';
 import 'package:jantung_app/app/data/services/preprocessing/service.dart';
 import 'package:jantung_app/core/utils/get_errors.dart';
 
 class HomeController extends GetxController {
   //TODO: Implement HomeController
   PreprocessingService? preprocessing;
+  PatientService? patient;
 
-  Rx<File?> selectedVideo = Rx<File?>(null);
-  Rx<FilePickerResult?> video = Rx<FilePickerResult?>(null);
-  Rx<List<Map<String, dynamic>>> fileList = Rx<List<Map<String, dynamic>>>([]);
-  var resJson = {}.obs;
+  var listPatient = List<dynamic>.empty(growable: true).obs;
+  var page = 1;
+  var isDataProcessing = false.obs;
+
+  // For Pagination
+  ScrollController scrollController = ScrollController();
+  var isMoreDataAvailable = true.obs;
 
   @override
-  void onInit() {
-    this.preprocessing = Get.find<PreprocessingService>();
+  void onInit() async {
+    this.patient = Get.find<PatientService>();
     super.onInit();
-    // Fetch the file list when the screen initializes
+
+    // Fetch Data
+    getPatient();
   }
 
-  Future<void> getVideo() async {
-    video.value = await FilePicker.platform.pickFiles();
-    if (video.value == null) {
-      print("No file selected");
+  getImage(index) {
+    if (listPatient[index]['gender'] == 0) {
+      return "assets/images/doodle2.png";
     } else {
-      selectedVideo.value = File(video.value!.files.single.path.toString());
-      video.value?.files.forEach((element) {
-        print(element.name);
-      });
+      return "assets/images/doodle3.png";
     }
   }
 
-  Future<void> processVideo() async {
-    var data = await preprocessing?.processVideo(selectedVideo.value!);
+  // Fetch Data
+  void getPatient() async {
+    try {
+      isMoreDataAvailable(false);
+      isDataProcessing(true);
+      await patient?.getPatient().then((response) {
+        if (VerifyError.verify(response)) {
+          Get.snackbar('Please Reload Data', response.getError(),
+              snackPosition: SnackPosition.TOP);
+          refreshList();
+        } else {
+          isDataProcessing(false);
+          listPatient.addAll(response);
+          print(listPatient);
+        }
+      }, onError: (err) {
+        isDataProcessing(false);
+        Get.snackbar('Please Reload Data', err.toString(),
+            snackPosition: SnackPosition.TOP);
+      });
+    } catch (exception) {
+      isDataProcessing(false);
+      Get.snackbar('Please Reload Data', exception.toString(),
+          snackPosition: SnackPosition.TOP);
+    }
+  }
+
+  // Refresh List
+  void refreshList() async {
+    page = 1;
+    getPatient();
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+    scrollController.dispose();
   }
 }

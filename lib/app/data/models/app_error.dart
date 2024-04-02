@@ -18,4 +18,8 @@ class AppError {
   Map<String, dynamic> toJson() => {
         "errors": errors,
       };
+
+  String? getError() {
+    return errors;
+  }
 }
