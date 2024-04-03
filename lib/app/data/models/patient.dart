@@ -1,8 +1,8 @@
 class Patient {
   int? patientId;
   String? patientName;
-  DateTime? patientDob;
-  String? patientGender;
+  String? patientDob;
+  int? patientGender;
 
   Patient({
     this.patientId,
@@ -13,7 +13,7 @@ class Patient {
 
   Patient.fromJson(Map<String, dynamic> json) {
     patientId = json['patient_id'];
-    patientName = json['patient_name'];
+    patientName = json['name'];
     patientDob = json['dob'];
     patientGender = json['gender'];
   }
@@ -21,7 +21,7 @@ class Patient {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['patient_id'] = this.patientId;
-    data['patient_name'] = this.patientName;
+    data['name'] = this.patientName;
     data['dob'] = this.patientDob;
     data['gender'] = this.patientGender;
 

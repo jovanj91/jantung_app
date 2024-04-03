@@ -24,13 +24,14 @@ class NewPatientForm extends StatelessWidget {
                 text: 'Name',
                 onChanged: (v) => this.controller.changeName(v),
                 onSaved: (v) => this.controller.savedName(v),
+                onValidate: (v) => this.controller.validateName(v),
               ),
             ),
           ],
         ),
         SizedBox(height: getProportionateScreenHeight(10)),
         Row(
-          children: <Widget>[
+          children: [
             controller.addRadioButton(0, 'Male'),
             controller.addRadioButton(1, 'Female'),
           ],
@@ -40,9 +41,11 @@ class NewPatientForm extends StatelessWidget {
           children: [
             Expanded(
               flex: 10,
-              child: Obx(() => Text(
-                    controller.dateOutput(),
-                    style: TextStyle(color: kInacvtiveWidget),
+              child: Obx(() => CustomTffWidget(
+                    readonly: true,
+                    controller:
+                        TextEditingController(text: controller.dateOutput()),
+                    text: 'Date of Birth',
                   )),
             ),
             Expanded(
@@ -52,7 +55,6 @@ class NewPatientForm extends StatelessWidget {
                     icon: Icon(
                       Icons.calendar_month,
                       color: kPrimaryColor,
-                      
                     )))
           ],
         ),

@@ -24,7 +24,7 @@ class LoginController extends GetxController {
           ?.login(
               this.auth?.user.value.useremail, this.auth?.user.value.password)
           .then((response) {
-        print(response);
+        print('Controller Response : ' + response.toString());
         if (VerifyError.verify(response)) {
           Get.snackbar('Login Failed', response.getError(),
               snackPosition: SnackPosition.TOP);

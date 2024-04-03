@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
 import 'package:jantung_app/app/modules/home/bindings/home_binding.dart';
+import 'package:jantung_app/app/modules/home/controllers/home_controller.dart';
 import 'package:jantung_app/app/modules/home/views/home_view.dart';
 import 'package:jantung_app/app/modules/profile/bindings/profile_binding.dart';
 import 'package:jantung_app/app/modules/profile/views/profile_view.dart';
@@ -15,7 +16,7 @@ class NavigationController extends GetxController
     with GetTickerProviderStateMixin {
   AuthService? auth;
   PatientService? patient;
-
+  final HomeController homecon = Get.find<HomeController>();
   late AnimationController fabAnimationController;
   late AnimationController borderRadiusAnimationController;
   late Animation<double> fabAnimation;
@@ -129,11 +130,12 @@ class NavigationController extends GetxController
     if (pickedDate != null && pickedDate != selectedDate.value) {
       selectedDate.value = pickedDate;
     }
-
+    var formatedpickeddate =
+        DateFormat("dd-MM-yyyy").format(selectedDate.value).toString();
     this
         .patient
         ?.patientData
-        .update((patientData) => patientData?.patientDob = pickedDate);
+        .update((patientData) => patientData?.patientDob = formatedpickeddate);
   }
 
   dateOutput() {
@@ -157,11 +159,15 @@ class NavigationController extends GetxController
               this.patient?.patientData.value.patientDob)
           .then((response) {
         print(response);
+        print(this.patient?.patientData.value.patientDob);
         if (VerifyError.verify(response)) {
           Get.snackbar('Failed, try again', response.getError(),
               snackPosition: SnackPosition.TOP);
         } else {
-          Get.offAllNamed(Routes.NAVIGATION);
+          Get.back();
+          Get.snackbar('Patient Added', 'Patient Added Successfully',
+              snackPosition: SnackPosition.TOP);
+          homecon.getPatient();
         }
       }, onError: (err) {
         Get.snackbar('Failed add Patient', err.toString(),
@@ -183,24 +189,38 @@ class NavigationController extends GetxController
       ?.patientData
       .update((patientData) => patientData?.patientName = v);
 
-  List gender = [0, 1];
-  var select;
+  validateName(v) => v.length > 0 ? null : 'Please Fill This Field';
 
-  changeDob(v) => this
+  List gender = [0, 1];
+  RxInt select = 0.obs;
+
+  changeGender(v) => this
       .patient
       ?.patientData
       .update((patientData) => patientData?.patientGender = v);
 
+  defaultGender() {
+    if (this.patient?.patientData == null) {
+      this
+          .patient
+          ?.patientData
+          .update((patientData) => patientData?.patientGender = 1);
+    }
+  }
+
   Row addRadioButton(int btnValue, String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Radio(
-          activeColor: kPrimaryColor,
-          value: gender[btnValue],
-          groupValue: select,
-          onChanged: (value) => changeDob(value),
-        ),
+      children: [
+        Obx(() => Radio(
+              activeColor: kPrimaryColor,
+              value: gender[btnValue],
+              groupValue: select.value,
+              onChanged: (value) {
+                select.value = value;
+                changeGender(value);
+              },
+            )),
         Text(title)
       ],
     );

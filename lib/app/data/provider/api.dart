@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-// import 'package:http/http.dart' as http;
 import 'package:jantung_app/app/data/models/app_error.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
@@ -14,13 +13,14 @@ class MyApi extends GetConnect {
   login(email, password) async {
     AuthService auth = Get.find<AuthService>();
     try {
-      final response = await post(
-        '$baseUrl/login?include_auth_token',
-        json.encode({"email": email, "password": password}),
-      );
-      print(response.body);
-      if (response.isOk) {
-        final Map<String, dynamic> jsonResponse = response.body;
+      var url = Uri.parse('$baseUrl/login?include_auth_token');
+      final response = await http.post(url,
+          body: json.encode({"email": email, "password": password}),
+          headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        print(response.body);
         auth.token.value =
             jsonResponse['response']['user']['authentication_token'];
         auth.user.update((val) {
@@ -40,7 +40,9 @@ class MyApi extends GetConnect {
 
   logout() async {
     try {
-      final response = await post('$baseUrl/logout', "text/html");
+      var url = Uri.parse('$baseUrl/logout');
+      final response =
+          await http.post(url, headers: {'Content-Type': 'application/json'});
       return response;
     } catch (e) {
       return AppError(errors: 'Unexpected Error');
@@ -81,11 +83,13 @@ class MyApi extends GetConnect {
       'Content-Type': 'application/json', // Example header
     };
     try {
-      final response = await get("$baseUrl/getPatientsData", headers: headers);
-      if (response.status.hasError) {
-        return AppError(errors: response.statusText);
+      var url = Uri.parse('$baseUrl/getPatientsData');
+      final response = await http.get(url, headers: headers);
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      if (response.statusCode > 400) {
+        return AppError(errors: 'Failed to get data');
       } else {
-        return response.body['data'];
+        return jsonResponse['data'];
       }
     } catch (exception) {
       return AppError(errors: exception.toString());
@@ -101,13 +105,14 @@ class MyApi extends GetConnect {
       'Content-Type': 'application/json', // Example header
     };
     try {
-      final response = await post(
-        '$baseUrl/inputPatientData',
+      var url = Uri.parse('$baseUrl/inputPatientData');
+      final response = await http.post(
+        url,
         headers: headers,
-        json.encode({"name": name, "gender": gender, "dob": dob}),
+        body: json.encode({"name": name, "gender": gender, "dob": dob}),
       );
-      print(response.body);
-      if (response.isOk) {
+
+      if (response.statusCode >= 200) {
         patient.patientData.update((val) {
           val?.patientName = name;
           val?.patientGender = gender;
@@ -130,12 +135,14 @@ class MyApi extends GetConnect {
       'Content-Type': 'application/json', // Example header
     };
     try {
-      final response =
-          await get("$baseUrl/getPatientHistory", headers: headers);
-      if (response.status.hasError) {
-        return AppError(errors: response.statusText);
+      var url = Uri.parse('$baseUrl/getPatientHistory');
+      final response = await http.get(url, headers: headers);
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      if (response.statusCode >= 400) {
+        return AppError(errors: 'Failed to load data');
       } else {
-        return response.body['data'];
+        return jsonResponse['data'];
       }
     } catch (exception) {
       return AppError(errors: exception.toString());

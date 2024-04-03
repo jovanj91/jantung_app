@@ -12,6 +12,7 @@ class CustomTffWidget extends Container {
   final TextEditingController? controller;
   final Key? key;
   final text,
+      readonly,
       fontSize,
       focus,
       size,
@@ -45,6 +46,7 @@ class CustomTffWidget extends Container {
 
   CustomTffWidget({
     this.focus = true,
+    this.readonly = false,
     this.key,
     this.text,
     this.fontSize = 15.0,
@@ -97,6 +99,7 @@ class CustomTffWidget extends Container {
           ),
           child: TextFormField(
             textInputAction: TextInputAction.done,
+            readOnly: this.readonly,
             autofocus: this.focus,
             key: this.key,
             focusNode: this.focusNode,

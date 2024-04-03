@@ -7,6 +7,7 @@ import 'package:jantung_app/app/data/services/preprocessing/service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Get.putAsync(() => AuthService().init());
   await Get.putAsync(() => PreprocessingService().init());
   await Get.putAsync(() => PatientService().init());
