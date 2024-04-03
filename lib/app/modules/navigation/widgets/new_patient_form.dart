@@ -52,6 +52,7 @@ class NewPatientForm extends StatelessWidget {
                     icon: Icon(
                       Icons.calendar_month,
                       color: kPrimaryColor,
+                      
                     )))
           ],
         ),

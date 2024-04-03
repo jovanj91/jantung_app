@@ -1,7 +1,7 @@
 class Patient {
   int? patientId;
   String? patientName;
-  String? patientDob;
+  DateTime? patientDob;
   String? patientGender;
 
   Patient({

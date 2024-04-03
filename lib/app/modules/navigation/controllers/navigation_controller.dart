@@ -129,6 +129,11 @@ class NavigationController extends GetxController
     if (pickedDate != null && pickedDate != selectedDate.value) {
       selectedDate.value = pickedDate;
     }
+
+    this
+        .patient
+        ?.patientData
+        .update((patientData) => patientData?.patientDob = pickedDate);
   }
 
   dateOutput() {
