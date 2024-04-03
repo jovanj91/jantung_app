@@ -1,5 +1,4 @@
 import 'package:jantung_app/app/modules/home/controllers/home_controller.dart';
-import 'package:jantung_app/app/widgets/custom_tff.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jantung_app/core/utils/size_config.dart';

@@ -1,7 +1,6 @@
 import 'package:jantung_app/app/data/models/patient.dart';
 import 'package:jantung_app/app/data/provider/api.dart';
 import 'package:jantung_app/app/data/services/patient/repository.dart';
-import 'package:jantung_app/routes/app_pages.dart';
 
 import 'package:get/get.dart';
 

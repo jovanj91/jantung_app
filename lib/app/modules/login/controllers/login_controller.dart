@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:jantung_app/app/data/models/app_error.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/core/utils/get_errors.dart';
 import 'package:jantung_app/routes/app_pages.dart';

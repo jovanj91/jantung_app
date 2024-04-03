@@ -1,7 +1,6 @@
 import 'package:jantung_app/app/data/models/user.dart';
 import 'package:jantung_app/app/data/provider/api.dart';
 import 'package:jantung_app/app/data/services/auth/repository.dart';
-import 'package:jantung_app/routes/app_pages.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:get/get.dart';
