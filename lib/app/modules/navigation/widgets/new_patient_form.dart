@@ -22,19 +22,17 @@ class NewPatientForm extends StatelessWidget {
               child: CustomTffWidget(
                 type: TextInputType.name,
                 text: 'Name',
+                onChanged: (v) => this.controller.changeName(v),
+                onSaved: (v) => this.controller.savedName(v),
               ),
             ),
           ],
         ),
         SizedBox(height: getProportionateScreenHeight(10)),
         Row(
-          children: [
-            Expanded(
-              flex: 10,
-              child: CustomTffWidget(
-                text: 'Gender',
-              ),
-            ),
+          children: <Widget>[
+            controller.addRadioButton(0, 'Male'),
+            controller.addRadioButton(1, 'Female'),
           ],
         ),
         SizedBox(height: getProportionateScreenHeight(10)),

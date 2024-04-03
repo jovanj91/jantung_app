@@ -6,4 +6,5 @@ class PatientRepository {
   PatientRepository(this.api);
 
   getPatient() => api.getPatient();
+  addPatient(name, gender, dob) => api.addPatient(name, gender, dob);
 }

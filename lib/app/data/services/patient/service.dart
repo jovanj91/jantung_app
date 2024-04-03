@@ -11,9 +11,15 @@ class PatientService extends GetxService {
   }
 
   PatientRepository? repository;
+  final patientData = Patient().obs;
 
   getPatient() async {
     var data = await repository?.getPatient();
+    return data;
+  }
+
+  addPatient(name, gender, dob) async {
+    var data = await repository?.addPatient(name, gender, dob);
     return data;
   }
 }

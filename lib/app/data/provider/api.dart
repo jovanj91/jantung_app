@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 // import 'package:http/http.dart' as http;
 import 'package:jantung_app/app/data/models/app_error.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
+import 'package:jantung_app/app/data/services/patient/service.dart';
 import 'package:jantung_app/app/data/services/preprocessing/service.dart';
 
 const baseUrl = 'http://192.168.100.89:8080';
@@ -81,6 +82,56 @@ class MyApi extends GetConnect {
     };
     try {
       final response = await get("$baseUrl/getPatientsData", headers: headers);
+      if (response.status.hasError) {
+        return AppError(errors: response.statusText);
+      } else {
+        return response.body['data'];
+      }
+    } catch (exception) {
+      return AppError(errors: exception.toString());
+    }
+  }
+
+  //Adding patient data
+  Future addPatient(name, gender, dob) async {
+    AuthService auth = Get.find<AuthService>();
+    PatientService patient = Get.find<PatientService>();
+    final Map<String, String> headers = {
+      'Authentication-Token': auth.token.value,
+      'Content-Type': 'application/json', // Example header
+    };
+    try {
+      final response = await post(
+        '$baseUrl/inputPatientData',
+        headers: headers,
+        json.encode({"name": name, "gender": gender, "dob": dob}),
+      );
+      print(response.body);
+      if (response.isOk) {
+        patient.patientData.update((val) {
+          val?.patientName = name;
+          val?.patientGender = gender;
+          val?.patientDob = dob;
+        });
+        return response;
+      } else {
+        return AppError(errors: 'Failed to add Patient');
+      }
+    } catch (exception) {
+      return AppError(errors: 'Unexpected Error');
+    }
+  }
+
+  //Fetch patient history
+  Future getPatientHistory() async {
+    AuthService auth = Get.find<AuthService>();
+    final Map<String, String> headers = {
+      'Authentication-Token': auth.token.value,
+      'Content-Type': 'application/json', // Example header
+    };
+    try {
+      final response =
+          await get("$baseUrl/getPatientHistory", headers: headers);
       if (response.status.hasError) {
         return AppError(errors: response.statusText);
       } else {

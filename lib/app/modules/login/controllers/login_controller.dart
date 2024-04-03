@@ -44,25 +44,6 @@ class LoginController extends GetxController {
     }
   }
 
-  // login() async {
-  //   var data = await this.auth?.login(
-  //       this.auth?.user.value.useremail, this.auth?.user.value.password);
-  //   processingLogin(true);
-  //   if (data == null) {
-  //     Get.snackbar('Login Failed', 'Unexpected Error',
-  //         snackPosition: SnackPosition.TOP);
-  //     processingLogin(false);
-  //   }
-  //   if (VerifyError.verify(data)) {
-  //     processingLogin(false);
-  //     print(data);
-  //     Get.snackbar('Login Failed', data.errors,
-  //         snackPosition: SnackPosition.TOP);
-  //   } else {
-  //     Get.offAllNamed(Routes.NAVIGATION);
-  //   }
-  // }
-
   showPass() => this.obscure.value = !this.obscure.value;
   changeEmail(v) {
     if (GetUtils.isEmail(v)) {

@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
+import 'package:jantung_app/app/data/services/patient/service.dart';
 import 'package:jantung_app/app/modules/home/bindings/home_binding.dart';
 import 'package:jantung_app/app/modules/home/views/home_view.dart';
 import 'package:jantung_app/app/modules/profile/bindings/profile_binding.dart';
 import 'package:jantung_app/app/modules/profile/views/profile_view.dart';
+import 'package:jantung_app/core/utils/get_errors.dart';
+import 'package:jantung_app/core/values/constant.dart';
 import 'package:jantung_app/routes/app_pages.dart';
 
 class NavigationController extends GetxController
     with GetTickerProviderStateMixin {
   AuthService? auth;
+  PatientService? patient;
+
   late AnimationController fabAnimationController;
   late AnimationController borderRadiusAnimationController;
   late Animation<double> fabAnimation;
@@ -24,6 +29,7 @@ class NavigationController extends GetxController
   @override
   void onInit() {
     this.auth = Get.find<AuthService>();
+    this.patient = Get.find<PatientService>();
 
     this.fabAnimationController = AnimationController(
       duration: Duration(milliseconds: 500),
@@ -134,5 +140,64 @@ class NavigationController extends GetxController
     } else {
       return "Choose Date Of Birth";
     }
+  }
+
+  addPatient() async {
+    try {
+      await this
+          .patient
+          ?.addPatient(
+              this.patient?.patientData.value.patientName,
+              this.patient?.patientData.value.patientGender,
+              this.patient?.patientData.value.patientDob)
+          .then((response) {
+        print(response);
+        if (VerifyError.verify(response)) {
+          Get.snackbar('Failed, try again', response.getError(),
+              snackPosition: SnackPosition.TOP);
+        } else {
+          Get.offAllNamed(Routes.NAVIGATION);
+        }
+      }, onError: (err) {
+        Get.snackbar('Failed add Patient', err.toString(),
+            snackPosition: SnackPosition.TOP);
+      });
+    } catch (e) {
+      Get.snackbar('Failed add Patient', e.toString(),
+          snackPosition: SnackPosition.TOP);
+    }
+  }
+
+  changeName(v) => this
+      .patient
+      ?.patientData
+      .update((patientData) => patientData?.patientName = v);
+
+  savedName(v) => this
+      .patient
+      ?.patientData
+      .update((patientData) => patientData?.patientName = v);
+
+  List gender = [0, 1];
+  var select;
+
+  changeDob(v) => this
+      .patient
+      ?.patientData
+      .update((patientData) => patientData?.patientGender = v);
+
+  Row addRadioButton(int btnValue, String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Radio(
+          activeColor: kPrimaryColor,
+          value: gender[btnValue],
+          groupValue: select,
+          onChanged: (value) => changeDob(value),
+        ),
+        Text(title)
+      ],
+    );
   }
 }
