@@ -45,7 +45,9 @@ class PatientCard extends StatelessWidget {
                   Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 SizedBox(height: getProportionateScreenHeight(55)),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    
+                  },
                   child: Icon(Icons.arrow_forward_ios_rounded), // Empty child
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(

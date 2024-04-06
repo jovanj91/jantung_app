@@ -34,7 +34,9 @@ class MyApi extends GetConnect {
         return AppError(errors: 'Unexpected Error, please try again');
       }
     } catch (exception) {
-      return AppError(errors: 'Unexpected Error');
+      print(exception.toString());
+
+      return AppError(errors: exception.toString());
     }
   }
 
