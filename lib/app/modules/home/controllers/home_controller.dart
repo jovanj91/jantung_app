@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
 import 'package:jantung_app/app/data/services/preprocessing/service.dart';
 import 'package:jantung_app/core/utils/get_errors.dart';
+import 'package:jantung_app/routes/app_pages.dart';
 
 class HomeController extends GetxController {
   //TODO: Implement HomeController
@@ -65,6 +66,36 @@ class HomeController extends GetxController {
   void refreshList() async {
     page = 1;
     getPatient();
+  }
+
+  savedPatientId(v) => this
+      .patient
+      ?.patientHistory
+      .update((patientHistory) => patientHistory?.patientId = v);
+
+  void getPatientDetails(patientId) async {
+    try {
+      isDataProcessing(true);
+      await patient?.getPatientHistory(patientId).then((response) {
+        if (VerifyError.verify(response)) {
+          Get.snackbar('Please Reload Data', response.getError(),
+              snackPosition: SnackPosition.TOP);
+          getPatientDetails(patientId);
+        } else {
+          isDataProcessing(false);
+          savedPatientId(patientId);
+          Get.toNamed(Routes.DETAILS);
+        }
+      }, onError: (err) {
+        isDataProcessing(false);
+        Get.snackbar('Please Reload Data', err.toString(),
+            snackPosition: SnackPosition.TOP);
+      });
+    } catch (exception) {
+      isDataProcessing(false);
+      Get.snackbar('Please Reload Data', exception.toString(),
+          snackPosition: SnackPosition.TOP);
+    }
   }
 
   @override

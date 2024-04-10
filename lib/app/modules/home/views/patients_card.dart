@@ -46,7 +46,7 @@ class PatientCard extends StatelessWidget {
                 SizedBox(height: getProportionateScreenHeight(55)),
                 ElevatedButton(
                   onPressed: () {
-                    
+                    controller.getPatientDetails(controller.listPatient[index]['patient_id']);
                   },
                   child: Icon(Icons.arrow_forward_ios_rounded), // Empty child
                   style: ElevatedButton.styleFrom(

@@ -22,7 +22,7 @@ class DetailsController extends GetxController {
     super.onInit();
 
     // Fetch Data
-    getPatient();
+    getPatientHistory();
   }
 
   getImage() {
@@ -34,13 +34,15 @@ class DetailsController extends GetxController {
   }
 
   // Fetch Data
-  void getPatient() async {
+  void getPatientHistory() async {
     try {
       isMoreDataAvailable(false);
       isDataProcessing(true);
-      await patient?.getPatient().then((response) {
+      await patient
+          ?.getPatientHistory(this.patient?.patientHistory.value.patientId)
+          .then((response) {
         if (VerifyError.verify(response)) {
-          Get.snackbar('Please Reload Data', response.getError(),
+          Get.snackbar('Trying to Reload Data', response.getError(),
               snackPosition: SnackPosition.TOP);
           refreshList();
         } else {
@@ -63,7 +65,7 @@ class DetailsController extends GetxController {
   // Refresh List
   void refreshList() async {
     page = 1;
-    getPatient();
+    getPatientHistory();
   }
 
   @override

@@ -25,10 +25,6 @@ class HomeView extends GetView<HomeController> {
               padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [],
-                  ),
                   SizedBox(height: getProportionateScreenHeight(10)),
                   Expanded(
                     child: ListView.builder(

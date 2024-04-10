@@ -7,4 +7,5 @@ class PatientRepository {
 
   getPatient() => api.getPatient();
   addPatient(name, gender, dob) => api.addPatient(name, gender, dob);
+  getPatientHistory(patientId) => api.getPatientHistory(patientId);
 }

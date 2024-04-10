@@ -131,7 +131,7 @@ class NavigationController extends GetxController
       selectedDate.value = pickedDate;
     }
     var formatedpickeddate =
-        DateFormat("dd-MM-yyyy").format(selectedDate.value).toString();
+        DateFormat("yyyy-MM-dd").format(selectedDate.value).toString();
     this
         .patient
         ?.patientData

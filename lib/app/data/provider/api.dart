@@ -130,14 +130,14 @@ class MyApi extends GetConnect {
   }
 
   //Fetch patient history
-  Future getPatientHistory() async {
+  Future getPatientHistory(patientId) async {
     AuthService auth = Get.find<AuthService>();
     final Map<String, String> headers = {
       'Authentication-Token': auth.token.value,
       'Content-Type': 'application/json', // Example header
     };
     try {
-      var url = Uri.parse('$baseUrl/getPatientHistory');
+      var url = Uri.parse('$baseUrl/getPatientHistory?patient_id=$patientId');
       final response = await http.get(url, headers: headers);
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
