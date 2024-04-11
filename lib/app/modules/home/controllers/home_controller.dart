@@ -25,6 +25,8 @@ class HomeController extends GetxController {
 
     // Fetch Data
     getPatient();
+    this.patient?.patientData.refresh();
+    print(patient?.patientData.value);
   }
 
   getImage(index) {
@@ -72,6 +74,21 @@ class HomeController extends GetxController {
       .patient
       ?.patientHistory
       .update((patientHistory) => patientHistory?.patientId = v);
+
+  savedPatientName(v) => this
+      .patient
+      ?.patientData
+      .update((patienData) => patienData?.patientName = v);
+
+  savedPatientAge(v) => this
+      .patient
+      ?.patientData
+      .update((patienData) => patienData?.patientAge = v);
+
+  savedPatientGender(v) => this
+      .patient
+      ?.patientData
+      .update((patienData) => patienData?.patientGender = v);
 
   void getPatientDetails(patientId) async {
     try {

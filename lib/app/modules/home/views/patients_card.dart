@@ -35,7 +35,7 @@ class PatientCard extends StatelessWidget {
                   children: [
                     SizedBox(height: getProportionateScreenHeight(20)),
                     Text(
-                      '${controller.listPatient[index]['patient_name']}',
+                      '${controller.listPatient[index]['patientName']}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ]),
@@ -46,7 +46,14 @@ class PatientCard extends StatelessWidget {
                 SizedBox(height: getProportionateScreenHeight(55)),
                 ElevatedButton(
                   onPressed: () {
-                    controller.getPatientDetails(controller.listPatient[index]['patient_id']);
+                    controller.savedPatientName(
+                        controller.listPatient[index]['patientName']);
+                    controller.savedPatientAge(
+                        controller.listPatient[index]['patientAge']);
+                    controller.savedPatientGender(
+                        controller.listPatient[index]['patientGender']);
+                    controller.getPatientDetails(
+                        controller.listPatient[index]['patientId']);
                   },
                   child: Icon(Icons.arrow_forward_ios_rounded), // Empty child
                   style: ElevatedButton.styleFrom(

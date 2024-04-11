@@ -25,8 +25,8 @@ class DetailsController extends GetxController {
     getPatientHistory();
   }
 
-  getImage() {
-    if (listHistory[0]['gender'] == 0) {
+  getImage(gender) {
+    if (gender == 0) {
       return "assets/images/doodle2.png";
     } else {
       return "assets/images/doodle3.png";

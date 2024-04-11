@@ -37,7 +37,8 @@ class DetailsView extends GetView<DetailsController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Image.asset(
-                            controller.getImage().toString(),
+                            controller.getImage(controller
+                                .patient?.patientData.value.patientGender),
                             height: 100,
                             width: 100,
                             fit: BoxFit.cover,
@@ -50,12 +51,12 @@ class DetailsView extends GetView<DetailsController> {
                                   SizedBox(
                                       height: getProportionateScreenHeight(20)),
                                   Text(
-                                    '${controller.listHistory[0]['patientName']}',
+                                    '${controller.patient?.patientData.value.patientName}',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    'Age : ${controller.listHistory[0]['patientAge']}',
+                                    'Age : ${controller.patient?.patientData.value.patientAge}',
                                     style: TextStyle(
                                         fontWeight: FontWeight.normal),
                                   ),
@@ -64,7 +65,44 @@ class DetailsView extends GetView<DetailsController> {
                         ],
                       ),
                     ),
-                  )
+                  ),
+                  SizedBox(height: getProportionateScreenHeight(20)),
+                  Expanded(
+                      child: controller.listHistory.isEmpty
+                          ? Center(
+                              child: Text('No History Data Yet'),
+                            )
+                          : SingleChildScrollView(
+                              child: DataTable(
+                              columns: [
+                                DataColumn(
+                                    label: Text('No',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))),
+                                DataColumn(
+                                    label: Text('Check Result',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))),
+                                DataColumn(
+                                    label: Text('Date Checked',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))),
+                              ],
+                              rows: controller.listHistory
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                final datacount = entry.key + 1;
+                                final Map<String, dynamic> rowData =
+                                    entry.value;
+                                return DataRow(cells: [
+                                  DataCell(Text(datacount.toString())),
+                                  DataCell(Text(rowData['checkResult'])),
+                                  DataCell(
+                                      Text(rowData['checkedAt'].toString())),
+                                ]);
+                              }).toList(),
+                            )))
                 ]));
           }
         }));

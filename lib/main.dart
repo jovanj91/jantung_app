@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:jantung_app/app/app.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
