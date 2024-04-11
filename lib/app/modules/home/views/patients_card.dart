@@ -18,7 +18,7 @@ class PatientCard extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Container(
         padding: EdgeInsets.all(15.0),
-        width: SizeConfig.screenWidth * 0.88,
+        width: SizeConfig.screenWidth * 0.95,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

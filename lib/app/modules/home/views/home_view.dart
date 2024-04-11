@@ -21,29 +21,32 @@ class HomeView extends GetView<HomeController> {
           );
         } else {
           if (controller.listPatient.length > 0) {
-            return Container(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-              child: Column(
-                children: [
-                  SizedBox(height: getProportionateScreenHeight(10)),
-                  Expanded(
-                    child: ListView.builder(
-                      controller: controller.scrollController,
-                      itemCount: controller.listPatient.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index == controller.listPatient.length - 1 &&
-                            controller.isMoreDataAvailable.value == true) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                        return Container(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [PatientCard(index: index)],
-                        ));
-                      },
+            return Center(
+              child: Container(
+                padding:
+                    EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                child: Column(
+                  children: [
+                    SizedBox(height: getProportionateScreenHeight(10)),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: controller.scrollController,
+                        itemCount: controller.listPatient.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          if (index == controller.listPatient.length - 1 &&
+                              controller.isMoreDataAvailable.value == true) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          return Container(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [PatientCard(index: index)],
+                          ));
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           } else {

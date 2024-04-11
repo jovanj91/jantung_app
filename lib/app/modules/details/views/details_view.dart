@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:jantung_app/core/utils/size_config.dart';
 
@@ -21,89 +20,86 @@ class DetailsView extends GetView<DetailsController> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return Container(
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                child: Column(children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Container(
-                      padding: EdgeInsets.all(15.0),
-                      width: SizeConfig.screenWidth * 0.88,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            controller.getImage(controller
-                                .patient?.patientData.value.patientGender),
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          SizedBox(width: getProportionateScreenWidth(20)),
-                          Expanded(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                      height: getProportionateScreenHeight(20)),
-                                  Text(
-                                    '${controller.patient?.patientData.value.patientName}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    'Age : ${controller.patient?.patientData.value.patientAge}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                ]),
-                          ),
-                        ],
-                      ),
+            return Center(
+              child: Container(
+                  child: Column(children: [
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Container(
+                    padding: EdgeInsets.all(15.0),
+                    width: SizeConfig.screenWidth * 0.88,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          controller.getImage(controller
+                              .patient?.patientData.value.patientGender),
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(width: getProportionateScreenWidth(20)),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    height: getProportionateScreenHeight(20)),
+                                Text(
+                                  '${controller.patient?.patientData.value.patientName}',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Age : ${controller.patient?.patientData.value.patientAge}',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.normal),
+                                ),
+                              ]),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: getProportionateScreenHeight(20)),
-                  Expanded(
-                      child: controller.listHistory.isEmpty
-                          ? Center(
-                              child: Text('No History Data Yet'),
-                            )
-                          : SingleChildScrollView(
-                              child: DataTable(
-                              columns: [
-                                DataColumn(
-                                    label: Text('No',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold))),
-                                DataColumn(
-                                    label: Text('Check Result',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold))),
-                                DataColumn(
-                                    label: Text('Date Checked',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold))),
-                              ],
-                              rows: controller.listHistory
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                final datacount = entry.key + 1;
-                                final Map<String, dynamic> rowData =
-                                    entry.value;
-                                return DataRow(cells: [
-                                  DataCell(Text(datacount.toString())),
-                                  DataCell(Text(rowData['checkResult'])),
-                                  DataCell(
-                                      Text(rowData['checkedAt'].toString())),
-                                ]);
-                              }).toList(),
-                            )))
-                ]));
+                ),
+                SizedBox(height: getProportionateScreenHeight(20)),
+                Expanded(
+                    child: controller.listHistory.isEmpty
+                        ? Center(
+                            child: Text('No History Data Yet'),
+                          )
+                        : SingleChildScrollView(
+                            child: DataTable(
+                            columns: [
+                              DataColumn(
+                                  label: Text('No',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                              DataColumn(
+                                  label: Text('Check Result',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                              DataColumn(
+                                  label: Text('Date Checked',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                            ],
+                            rows: controller.listHistory
+                                .asMap()
+                                .entries
+                                .map((entry) {
+                              final datacount = entry.key + 1;
+                              final Map<String, dynamic> rowData = entry.value;
+                              return DataRow(cells: [
+                                DataCell(Text(datacount.toString())),
+                                DataCell(Text(rowData['checkResult'])),
+                                DataCell(Text(rowData['checkedAt'].toString())),
+                              ]);
+                            }).toList(),
+                          )))
+              ])),
+            );
           }
         }));
   }
