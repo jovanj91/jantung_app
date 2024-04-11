@@ -26,7 +26,7 @@ class HomeController extends GetxController {
     // Fetch Data
     getPatient();
     this.patient?.patientData.refresh();
-    print(patient?.patientData.value);
+    refreshList();
   }
 
   getImage(index) {
