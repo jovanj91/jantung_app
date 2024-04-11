@@ -24,9 +24,9 @@ class HomeController extends GetxController {
     super.onInit();
 
     // Fetch Data
+    listPatient.clear();
     getPatient();
     this.patient?.patientData.refresh();
-    refreshList();
   }
 
   getImage(index) {
@@ -65,8 +65,9 @@ class HomeController extends GetxController {
   }
 
   // Refresh List
-  void refreshList() async {
+  Future<void> refreshList() async {
     page = 1;
+    listPatient.clear();
     getPatient();
   }
 

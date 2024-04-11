@@ -29,20 +29,23 @@ class HomeView extends GetView<HomeController> {
                   children: [
                     SizedBox(height: getProportionateScreenHeight(10)),
                     Expanded(
-                      child: ListView.builder(
-                        controller: controller.scrollController,
-                        itemCount: controller.listPatient.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == controller.listPatient.length - 1 &&
-                              controller.isMoreDataAvailable.value == true) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                          return Container(
-                              child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [PatientCard(index: index)],
-                          ));
-                        },
+                      child: RefreshIndicator(
+                        onRefresh: controller.refreshList,
+                        child: ListView.builder(
+                          controller: controller.scrollController,
+                          itemCount: controller.listPatient.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == controller.listPatient.length - 1 &&
+                                controller.isMoreDataAvailable.value == true) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            return Container(
+                                child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [PatientCard(index: index)],
+                            ));
+                          },
+                        ),
                       ),
                     ),
                   ],
