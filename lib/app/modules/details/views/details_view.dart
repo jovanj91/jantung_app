@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jantung_app/app/modules/details/views/heartcheck_form.dart';
 import 'package:jantung_app/core/utils/size_config.dart';
+import 'package:jantung_app/core/values/constant.dart';
 
 import '../controllers/details_controller.dart';
 
@@ -97,7 +99,30 @@ class DetailsView extends GetView<DetailsController> {
                                 DataCell(Text(rowData['checkedAt'].toString())),
                               ]);
                             }).toList(),
-                          )))
+                          ))),
+                ElevatedButton(
+                  onPressed: () {
+                       Get.defaultDialog(
+          title: 'Tambah Data Pasien',
+          content: HeartCheckForm(),
+          textConfirm: 'Ya',
+          onConfirm: () async {
+
+          },
+          buttonColor: kPrimaryColor,
+          textCancel: 'Tidak',
+        );
+
+
+                  },
+                  child: Text('Check'), // Empty child
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          50.0), // Adjust the value for the desired roundness
+                    ),
+                  ),
+                ),
               ])),
             );
           }

@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
 import 'package:jantung_app/core/utils/get_errors.dart';
+import 'package:video_player/video_player.dart';
 
 class DetailsController extends GetxController {
   //TODO: Implement DetailsController
@@ -15,6 +19,11 @@ class DetailsController extends GetxController {
   // For Pagination
   ScrollController scrollController = ScrollController();
   var isMoreDataAvailable = true.obs;
+
+  // Video Upload
+  Rx<File?> selectedVideo = Rx<File?>(null);
+  Rx<FilePickerResult?> video = Rx<FilePickerResult?>(null);
+  Rx<List<Map<String, dynamic>>> fileList = Rx<List<Map<String, dynamic>>>([]);
 
   @override
   void onInit() async {
@@ -66,6 +75,25 @@ class DetailsController extends GetxController {
   void refreshList() async {
     page = 1;
     getPatientHistory();
+  }
+
+  Future<void> processVideo() async {
+    try {
+      video.value = await FilePicker.platform.pickFiles(
+        type: FileType.video,
+      );
+      // ignore: unnecessary_null_comparison
+      if (video != null) {
+        selectedVideo.value = File(video.value!.files.single.path.toString());
+        video.value?.files.forEach((element) {
+          print(element.name);
+        });
+      } else {
+        print('User canceled file picking');
+      }
+    } catch (e) {
+      print('Error initializing video: $e');
+    }
   }
 
   @override
