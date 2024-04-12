@@ -61,6 +61,26 @@ class DetailsView extends GetView<DetailsController> {
                                 ),
                               ]),
                         ),
+                        SizedBox(height: getProportionateScreenHeight(100)),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.defaultDialog(
+                              title: 'Heart Check',
+                              content: HeartCheckForm(),
+                              textConfirm: 'Ya',
+                              onConfirm: () async {},
+                              buttonColor: kPrimaryColor,
+                              textCancel: 'Tidak',
+                            );
+                          },
+                          child: Text('Check'), // Empty child
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  50.0), // Adjust the value for the desired roundness
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -100,29 +120,6 @@ class DetailsView extends GetView<DetailsController> {
                               ]);
                             }).toList(),
                           ))),
-                ElevatedButton(
-                  onPressed: () {
-                       Get.defaultDialog(
-          title: 'Tambah Data Pasien',
-          content: HeartCheckForm(),
-          textConfirm: 'Ya',
-          onConfirm: () async {
-
-          },
-          buttonColor: kPrimaryColor,
-          textCancel: 'Tidak',
-        );
-
-
-                  },
-                  child: Text('Check'), // Empty child
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          50.0), // Adjust the value for the desired roundness
-                    ),
-                  ),
-                ),
               ])),
             );
           }

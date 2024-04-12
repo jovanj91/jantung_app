@@ -21,6 +21,9 @@ class DetailsController extends GetxController {
   var isMoreDataAvailable = true.obs;
 
   // Video Upload
+  late VideoPlayerController videoPlayerController =
+      VideoPlayerController.networkUrl(Uri());
+  RxBool isPlayed = false.obs;
   Rx<File?> selectedVideo = Rx<File?>(null);
   Rx<FilePickerResult?> video = Rx<FilePickerResult?>(null);
   Rx<List<Map<String, dynamic>>> fileList = Rx<List<Map<String, dynamic>>>([]);
@@ -85,9 +88,11 @@ class DetailsController extends GetxController {
       // ignore: unnecessary_null_comparison
       if (video != null) {
         selectedVideo.value = File(video.value!.files.single.path.toString());
-        video.value?.files.forEach((element) {
-          print(element.name);
-        });
+        videoPlayerController =
+            VideoPlayerController.file(selectedVideo.value!);
+        // Initialize the video player controller
+        await videoPlayerController.initialize();
+        update();
       } else {
         print('User canceled file picking');
       }
