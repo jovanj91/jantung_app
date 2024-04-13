@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:jantung_app/app/data/models/app_error.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
-import 'package:jantung_app/app/data/services/preprocessing/service.dart';
 
 const baseUrl = 'http://192.168.100.89:8080';
 
@@ -54,7 +53,7 @@ class MyApi extends GetConnect {
   processVideo(File videoFile) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('$baseUrl/preprocessing'),
+      Uri.parse('$baseUrl/upload'),
     );
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
     request.files.add(
@@ -66,6 +65,7 @@ class MyApi extends GetConnect {
       ),
     );
     request.headers.addAll(headers);
+
     print("request: " + request.toString());
     final startTime = DateTime.now();
     var res = await request.send();
@@ -75,6 +75,41 @@ class MyApi extends GetConnect {
         (videoFile.lengthSync() / 1024) / duration.inSeconds; // Speed in Kbps
     print('Upload Speed: ${uploadSpeed.toStringAsFixed(2)} Kbps');
     http.Response response = await http.Response.fromStream(res);
+  }
+
+  Future detectEchocardiography(File videoFile, patientId) async {
+    AuthService auth = Get.find<AuthService>();
+    final Map<String, String> headers = {
+      'Authentication-Token': auth.token.value,
+      'Content-type': 'multipart/form-data', // Example header
+    };
+    try {
+      var url = Uri.parse('$baseUrl/detectEchocardiography');
+      var request = http.MultipartRequest(
+        'POST',
+        url,
+      );
+
+      request.files.add(
+        http.MultipartFile(
+          'video',
+          videoFile.readAsBytes().asStream(),
+          videoFile.lengthSync(),
+          filename: videoFile.path.split('/').last,
+        ),
+      );
+      request.headers.addAll(headers);
+      request.fields['patient_id'] = patientId.toString();
+      print('1');
+      var response = await request.send();
+      if (response.statusCode >= 200) {
+        return response;
+      } else {
+        return AppError(errors: 'Failed to check heart');
+      }
+    } catch (exception) {
+      return AppError(errors: exception.toString());
+    }
   }
 
   // Fetch Patient Data

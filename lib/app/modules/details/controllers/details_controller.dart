@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
+import 'package:jantung_app/app/data/services/preprocessing/service.dart';
 import 'package:jantung_app/core/utils/get_errors.dart';
 import 'package:video_player/video_player.dart';
 
@@ -11,6 +12,7 @@ class DetailsController extends GetxController {
   //TODO: Implement DetailsController
 
   PatientService? patient;
+  PreprocessingService? preprocessing;
 
   var listHistory = List<dynamic>.empty(growable: true).obs;
   var page = 1;
@@ -31,6 +33,8 @@ class DetailsController extends GetxController {
   @override
   void onInit() async {
     this.patient = Get.find<PatientService>();
+    this.preprocessing = Get.find<PreprocessingService>();
+
     super.onInit();
 
     // Fetch Data
@@ -98,6 +102,55 @@ class DetailsController extends GetxController {
       }
     } catch (e) {
       print('Error initializing video: $e');
+    }
+  }
+
+  detectEchocardiography() async {
+    try {
+      await this
+          .preprocessing
+          ?.detectEchocardiography(selectedVideo.value!,
+              this.patient?.patientHistory.value.patientId)
+          .then((response) {
+        print(response);
+        if (VerifyError.verify(response)) {
+          Get.snackbar('Failed, try again', response.getError(),
+              snackPosition: SnackPosition.TOP);
+        } else {
+          Get.back();
+          Get.snackbar('File Uploaded', 'Patient Added Successfully',
+              snackPosition: SnackPosition.TOP);
+        }
+      }, onError: (err) {
+        Get.snackbar('Failed add Patient', err.toString(),
+            snackPosition: SnackPosition.TOP);
+      });
+    } catch (e) {
+      Get.snackbar('Failed add Patient', e.toString(),
+          snackPosition: SnackPosition.TOP);
+    }
+  }
+
+  uploadVideo() async {
+    try {
+      await this.preprocessing?.processVideo(selectedVideo.value!).then(
+          (response) {
+        print(response);
+        if (VerifyError.verify(response)) {
+          Get.snackbar('Failed, try again', response.getError(),
+              snackPosition: SnackPosition.TOP);
+        } else {
+          Get.back();
+          Get.snackbar('File Uploaded', 'Patient Added Successfully',
+              snackPosition: SnackPosition.TOP);
+        }
+      }, onError: (err) {
+        Get.snackbar('Failed add Patient', err.toString(),
+            snackPosition: SnackPosition.TOP);
+      });
+    } catch (e) {
+      Get.snackbar('Failed add Patient', e.toString(),
+          snackPosition: SnackPosition.TOP);
     }
   }
 

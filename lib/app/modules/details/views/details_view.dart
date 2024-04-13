@@ -68,7 +68,9 @@ class DetailsView extends GetView<DetailsController> {
                               title: 'Heart Check',
                               content: HeartCheckForm(),
                               textConfirm: 'Ya',
-                              onConfirm: () async {},
+                              onConfirm: () async {
+                                controller.detectEchocardiography();
+                              },
                               buttonColor: kPrimaryColor,
                               textCancel: 'Tidak',
                             );

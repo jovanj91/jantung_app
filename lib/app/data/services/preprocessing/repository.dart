@@ -5,4 +5,6 @@ class PreprocessingRepository {
 
   PreprocessingRepository(this.api);
   processVideo(video) => api.processVideo(video);
+  detectEchocardiography(video, patientId) => api.detectEchocardiography(video, patientId);
+
 }
