@@ -18,51 +18,60 @@ class HeartCheckForm extends StatelessWidget {
           if (controller.video.value != null) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      AspectRatio(
-                        aspectRatio:
-                            controller.videoPlayerController.value.aspectRatio,
-                        child: VideoPlayer(controller.videoPlayerController),
+              child: Container(
+                child: controller.isVideoUploading.value
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              AspectRatio(
+                                aspectRatio: controller
+                                    .videoPlayerController.value.aspectRatio,
+                                child: VideoPlayer(
+                                    controller.videoPlayerController),
+                              ),
+                              Positioned(
+                                child: GestureDetector(
+                                    onTap: () {
+                                      if (controller.videoPlayerController.value
+                                          .isPlaying) {
+                                        controller.videoPlayerController
+                                            .pause();
+                                        controller.isPlayed.value = false;
+                                      } else {
+                                        controller.videoPlayerController.play();
+                                        controller.isPlayed.value = true;
+                                      }
+                                    },
+                                    child: controller.isPlayed.value
+                                        ? Icon(
+                                            Icons.play_arrow,
+                                            size: 50,
+                                            color: Colors.transparent,
+                                          )
+                                        : Icon(
+                                            Icons.pause,
+                                            size: 50,
+                                            color: Colors.white,
+                                          )),
+                              ),
+                            ],
+                          ),
+                          const Text(
+                            'Selected File:',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text(controller.video.value?.files[0].name ?? '',
+                              style: const TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold))
+                        ],
                       ),
-                      Positioned(
-                        child: GestureDetector(
-                            onTap: () {
-                              if (controller
-                                  .videoPlayerController.value.isPlaying) {
-                                controller.videoPlayerController.pause();
-                                controller.isPlayed.value = false;
-                              } else {
-                                controller.videoPlayerController.play();
-                                controller.isPlayed.value = true;
-                              }
-                            },
-                            child: controller.isPlayed.value
-                                ? Icon(
-                                    Icons.play_arrow,
-                                    size: 50,
-                                    color: Colors.transparent,
-                                  )
-                                : Icon(
-                                    Icons.pause,
-                                    size: 50,
-                                    color: Colors.white,
-                                  )),
-                      ),
-                    ],
-                  ),
-                  const Text(
-                    'Selected File:',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(controller.video.value?.files[0].name ?? '',
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold))
-                ],
               ),
             );
           } else {

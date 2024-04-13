@@ -10,6 +10,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Home'),
         centerTitle: true,

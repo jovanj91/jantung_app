@@ -26,6 +26,7 @@ class DetailsController extends GetxController {
   late VideoPlayerController videoPlayerController =
       VideoPlayerController.networkUrl(Uri());
   RxBool isPlayed = false.obs;
+  RxBool isVideoUploading = false.obs;
   Rx<File?> selectedVideo = Rx<File?>(null);
   Rx<FilePickerResult?> video = Rx<FilePickerResult?>(null);
   Rx<List<Map<String, dynamic>>> fileList = Rx<List<Map<String, dynamic>>>([]);
@@ -36,6 +37,7 @@ class DetailsController extends GetxController {
     this.preprocessing = Get.find<PreprocessingService>();
 
     super.onInit();
+    listHistory.clear();
 
     // Fetch Data
     getPatientHistory();
@@ -60,7 +62,7 @@ class DetailsController extends GetxController {
         if (VerifyError.verify(response)) {
           Get.snackbar('Trying to Reload Data', response.getError(),
               snackPosition: SnackPosition.TOP);
-          refreshList();
+          refreshHistory();
         } else {
           isDataProcessing(false);
           listHistory.addAll(response);
@@ -79,8 +81,9 @@ class DetailsController extends GetxController {
   }
 
   // Refresh List
-  void refreshList() async {
+  Future<void> refreshHistory() async {
     page = 1;
+    listHistory.clear();
     getPatientHistory();
   }
 
@@ -107,6 +110,7 @@ class DetailsController extends GetxController {
 
   detectEchocardiography() async {
     try {
+      isVideoUploading(true);
       await this
           .preprocessing
           ?.detectEchocardiography(selectedVideo.value!,
@@ -114,19 +118,20 @@ class DetailsController extends GetxController {
           .then((response) {
         print(response);
         if (VerifyError.verify(response)) {
-          Get.snackbar('Failed, try again', response.getError(),
+          Get.snackbar('Failed, retrying', response.getError(),
               snackPosition: SnackPosition.TOP);
         } else {
+          isVideoUploading(false);
           Get.back();
-          Get.snackbar('File Uploaded', 'Patient Added Successfully',
+          Get.snackbar('File Uploaded', 'Heart Checked Successfully',
               snackPosition: SnackPosition.TOP);
         }
       }, onError: (err) {
-        Get.snackbar('Failed add Patient', err.toString(),
+        Get.snackbar('Heart Check Failed ', err.toString(),
             snackPosition: SnackPosition.TOP);
       });
     } catch (e) {
-      Get.snackbar('Failed add Patient', e.toString(),
+      Get.snackbar('Heart Check Failed', e.toString(),
           snackPosition: SnackPosition.TOP);
     }
   }

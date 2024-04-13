@@ -35,7 +35,7 @@ class DefaultButton extends Container {
           label: Text(
             text!,
             style: TextStyle(
-                fontSize: getProportionateScreenWidth(18), color: Colors.white),
+                fontSize: getProportionateScreenWidth(8), color: Colors.white),
           ),
           onPressed: () => callback()),
     );

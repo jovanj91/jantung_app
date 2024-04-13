@@ -74,7 +74,11 @@ class MyApi extends GetConnect {
     final uploadSpeed =
         (videoFile.lengthSync() / 1024) / duration.inSeconds; // Speed in Kbps
     print('Upload Speed: ${uploadSpeed.toStringAsFixed(2)} Kbps');
-    http.Response response = await http.Response.fromStream(res);
+    if (res.statusCode >= 200) {
+        return res;
+      } else {
+        return AppError(errors: 'Failed to check heart');
+      }
   }
 
   Future detectEchocardiography(File videoFile, patientId) async {
@@ -100,7 +104,6 @@ class MyApi extends GetConnect {
       );
       request.headers.addAll(headers);
       request.fields['patient_id'] = patientId.toString();
-      print('1');
       var response = await request.send();
       if (response.statusCode >= 200) {
         return response;

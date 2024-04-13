@@ -89,7 +89,7 @@ class DetailsView extends GetView<DetailsController> {
                 ),
                 SizedBox(height: getProportionateScreenHeight(20)),
                 Expanded(
-                    child: controller.listHistory.isEmpty
+                    child: RefreshIndicator( onRefresh : controller.refreshHistory, child:controller.listHistory.isEmpty
                         ? Center(
                             child: Text('No History Data Yet'),
                           )
@@ -121,7 +121,7 @@ class DetailsView extends GetView<DetailsController> {
                                 DataCell(Text(rowData['checkedAt'].toString())),
                               ]);
                             }).toList(),
-                          ))),
+                          )))),
               ])),
             );
           }

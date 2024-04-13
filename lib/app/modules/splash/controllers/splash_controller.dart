@@ -25,7 +25,6 @@ class SplashController extends GetxController {
       this.auth?.clearJwtToken();
       Future.delayed(const Duration(seconds: 3), () {
         Get.offAllNamed(Routes.LOGIN);
-        // Get.offAllNamed(Routes.NAVIGATION);
       });
     }
     super.onReady();

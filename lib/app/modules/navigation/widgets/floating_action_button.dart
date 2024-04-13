@@ -21,18 +21,44 @@ class CustomFloatingActionButton extends Container {
         controller.borderRadiusAnimationController.forward();
         controller.fabAnimationController.forward();
 
-        Get.defaultDialog(
-          title: 'Tambah Data Pasien',
-          content: NewPatientForm(),
-          textConfirm: 'Ya',
-          onConfirm: () async {
-            controller.defaultGender();
-            await this.controller.addPatient();
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return MyAlertDialog();
           },
-          buttonColor: kPrimaryColor,
-          textCancel: 'Tidak',
         );
       },
+    );
+  }
+}
+
+class MyAlertDialog extends StatelessWidget {
+  final controller = Get.find<NavigationController>();
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(20.0), // Adjust the radius as needed
+      ),
+      title: Text('Add Patient', textAlign: TextAlign.center),
+      actionsAlignment: MainAxisAlignment.center,
+      content: NewPatientForm(),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Get.back();
+          },
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () async {
+            this.controller.defaultGender();
+            await this.controller.addPatient();
+          },
+          child: Text('OK'),
+        ),
+      ],
     );
   }
 }

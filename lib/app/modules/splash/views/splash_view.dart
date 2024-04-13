@@ -21,10 +21,10 @@ class SplashView extends GetView<SplashController> {
           width: SizeConfig.wp(100.0),
           child: Column(
             children: [
-              SizedBox(height: SizeConfig.screenHeight * 0.3),
+              SizedBox(height: SizeConfig.screenHeight * 0.2),
               SpinKitPumpingHeart(
                 color: kSurfaceColor,
-                size: SizeConfig.wp(40.0),
+                size: SizeConfig.wp(30.0),
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.01),
               const Text(

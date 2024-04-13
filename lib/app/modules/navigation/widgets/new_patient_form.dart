@@ -13,52 +13,56 @@ class NewPatientForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Column(
-      children: [
-        Row(
+    return Container(
+      child: SingleChildScrollView(
+        child: Column(
           children: [
-            Expanded(
-              flex: 10,
-              child: CustomTffWidget(
-                type: TextInputType.name,
-                text: 'Name',
-                onChanged: (v) => this.controller.changeName(v),
-                onSaved: (v) => this.controller.savedName(v),
-                onValidate: (v) => this.controller.validateName(v),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 10,
+                  child: CustomTffWidget(
+                    type: TextInputType.name,
+                    text: 'Name',
+                    onChanged: (v) => this.controller.changeName(v),
+                    onSaved: (v) => this.controller.savedName(v),
+                    onValidate: (v) => this.controller.validateName(v),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: getProportionateScreenHeight(10)),
+            Row(
+              children: [
+                controller.addRadioButton(0, 'Male'),
+                controller.addRadioButton(1, 'Female'),
+              ],
+            ),
+            SizedBox(height: getProportionateScreenHeight(10)),
+            Row(
+              children: [
+                Expanded(
+                  flex: 10,
+                  child: Obx(() => CustomTffWidget(
+                        readonly: true,
+                        controller: TextEditingController(
+                            text: controller.dateOutput()),
+                        text: 'Date of Birth',
+                      )),
+                ),
+                Expanded(
+                    flex: 2,
+                    child: IconButton(
+                        onPressed: () => controller.chooseDate(),
+                        icon: Icon(
+                          Icons.calendar_month,
+                          color: kPrimaryColor,
+                        )))
+              ],
             ),
           ],
         ),
-        SizedBox(height: getProportionateScreenHeight(10)),
-        Row(
-          children: [
-            controller.addRadioButton(0, 'Male'),
-            controller.addRadioButton(1, 'Female'),
-          ],
-        ),
-        SizedBox(height: getProportionateScreenHeight(10)),
-        Row(
-          children: [
-            Expanded(
-              flex: 10,
-              child: Obx(() => CustomTffWidget(
-                    readonly: true,
-                    controller:
-                        TextEditingController(text: controller.dateOutput()),
-                    text: 'Date of Birth',
-                  )),
-            ),
-            Expanded(
-                flex: 2,
-                child: IconButton(
-                    onPressed: () => controller.chooseDate(),
-                    icon: Icon(
-                      Icons.calendar_month,
-                      color: kPrimaryColor,
-                    )))
-          ],
-        ),
-      ],
+      ),
     );
   }
 }

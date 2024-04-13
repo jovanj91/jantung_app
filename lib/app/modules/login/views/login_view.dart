@@ -36,14 +36,14 @@ class LoginView extends GetView<LoginController> {
                             Text("Welcome to JantungApp",
                                 style: TextStyle(
                                     color: kPrimaryColor,
-                                    fontSize: getProportionateScreenWidth(24),
+                                    fontSize: getProportionateScreenWidth(12),
                                     fontWeight: FontWeight.bold)),
                             SizedBox(height: SizeConfig.screenHeight * 0.02),
                             Text(
                                 "Please Sign In with Your Email \n and Password on Form Below",
                                 style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: getProportionateScreenWidth(14),
+                                  fontSize: getProportionateScreenWidth(10),
                                 )),
                           ],
                         ),
@@ -61,8 +61,8 @@ class LoginView extends GetView<LoginController> {
                             children: [
                               LoginForm(),
                               Container(
-                                margin: EdgeInsets.only(top: 24.0),
-                                width: SizeConfig.wp(30.0),
+                                margin: EdgeInsets.only(top: 50.0),
+                                width: SizeConfig.wp(20.0),
                                 child: DefaultButton(
                                   callback: () async {
                                     final FormState form =

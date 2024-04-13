@@ -17,7 +17,7 @@ class LoginForm extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              flex: 10,
+              flex: 12,
               child: CustomTffWidget(
                 type: TextInputType.emailAddress,
                 text: 'Email',
@@ -28,7 +28,7 @@ class LoginForm extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Obx(() => Icon(
                     Icons.check,
                     color: this.controller.isEmail.value
@@ -42,7 +42,7 @@ class LoginForm extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              flex: 10,
+              flex: 12,
               child: Obx(() => CustomTffWidget(
                     obscure: this.controller.obscure.value,
                     text: 'Password',
@@ -53,7 +53,7 @@ class LoginForm extends StatelessWidget {
                   )),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Obx(() => IconButton(
                   onPressed: () => this.controller.showPass(),
                   icon: Icon(
