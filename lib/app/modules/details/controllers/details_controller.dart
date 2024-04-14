@@ -108,28 +108,34 @@ class DetailsController extends GetxController {
     }
   }
 
+  var isButtonDisabled = false.obs;
+
   detectEchocardiography() async {
     try {
-      isVideoUploading(true);
-      await this
-          .preprocessing
-          ?.detectEchocardiography(selectedVideo.value!,
-              this.patient?.patientHistory.value.patientId)
-          .then((response) {
-        print(response);
-        if (VerifyError.verify(response)) {
-          Get.snackbar('Failed, retrying', response.getError(),
+      if (!isButtonDisabled.value) {
+        isButtonDisabled(true);
+        isVideoUploading(true);
+        await this
+            .preprocessing
+            ?.detectEchocardiography(selectedVideo.value!,
+                this.patient?.patientHistory.value.patientId)
+            .then((response) {
+          print(response);
+          if (VerifyError.verify(response)) {
+            Get.snackbar('Failed, retrying', response.getError(),
+                snackPosition: SnackPosition.TOP);
+          } else {
+            isVideoUploading(false);
+            isButtonDisabled(false);
+            Get.back();
+            Get.snackbar('File Uploaded', 'Heart Checked Successfully',
+                snackPosition: SnackPosition.TOP);
+          }
+        }, onError: (err) {
+          Get.snackbar('Heart Check Failed ', err.toString(),
               snackPosition: SnackPosition.TOP);
-        } else {
-          isVideoUploading(false);
-          Get.back();
-          Get.snackbar('File Uploaded', 'Heart Checked Successfully',
-              snackPosition: SnackPosition.TOP);
-        }
-      }, onError: (err) {
-        Get.snackbar('Heart Check Failed ', err.toString(),
-            snackPosition: SnackPosition.TOP);
-      });
+        });
+      }
     } catch (e) {
       Get.snackbar('Heart Check Failed', e.toString(),
           snackPosition: SnackPosition.TOP);
