@@ -23,7 +23,7 @@ class PatientCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.asset(
-              controller.getImage(index).toString(),
+              controller.getImage(index),
               height: 100,
               width: 100,
               fit: BoxFit.cover,

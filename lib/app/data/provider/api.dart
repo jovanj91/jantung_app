@@ -27,7 +27,7 @@ class MyApi extends GetConnect {
           val?.password = password;
         });
         return response;
-      } else if (response.statusCode == 400) {
+      } else if (response.statusCode >= 400 && response.statusCode <= 499) {
         return AppError(errors: 'Wrong Password or Email');
       } else {
         return AppError(errors: 'Unexpected Error, please try again');
@@ -105,7 +105,7 @@ class MyApi extends GetConnect {
       request.headers.addAll(headers);
       request.fields['patient_id'] = patientId.toString();
       var response = await request.send();
-      if (response.statusCode >= 200) {
+      if (response.statusCode >= 200 && response.statusCode <= 299) {
         return response;
       } else {
         return AppError(errors: 'Failed to check heart');
@@ -126,7 +126,7 @@ class MyApi extends GetConnect {
       var url = Uri.parse('$baseUrl/getPatientsData');
       final response = await http.get(url, headers: headers);
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      if (response.statusCode > 400) {
+      if (response.statusCode >= 400 && response.statusCode <= 499) {
         return AppError(errors: 'Failed to get data');
       } else {
         return jsonResponse['data'];
@@ -152,7 +152,7 @@ class MyApi extends GetConnect {
         body: json.encode({"name": name, "gender": gender, "dob": dob}),
       );
 
-      if (response.statusCode >= 200) {
+      if (response.statusCode >= 200 && response.statusCode <= 299) {
         patient.patientData.update((val) {
           val?.patientName = name;
           val?.patientGender = gender;
@@ -179,7 +179,7 @@ class MyApi extends GetConnect {
       final response = await http.get(url, headers: headers);
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-      if (response.statusCode >= 400) {
+      if (response.statusCode >= 400 && response.statusCode <= 499) {
         return AppError(errors: 'Failed to load data');
       } else {
         return jsonResponse['data'];

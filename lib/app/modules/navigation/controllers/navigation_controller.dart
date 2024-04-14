@@ -25,8 +25,6 @@ class NavigationController extends GetxController
   late CurvedAnimation borderRadiusCurve;
   late AnimationController hideBottomBarAnimationController;
 
-  var selectedDate = DateTime.now().obs;
-
   @override
   void onInit() {
     this.auth = Get.find<AuthService>();
@@ -67,6 +65,17 @@ class NavigationController extends GetxController
       Duration(seconds: 1),
       () => this.borderRadiusAnimationController.forward(),
     );
+
+    this
+        .patient
+        ?.patientData
+        .update((patientData) => patientData?.patientGender = null);
+
+    this
+        .patient
+        ?.patientData
+        .update((patientData) => patientData?.patientGender = null);
+
     super.onInit();
   }
 
@@ -82,6 +91,10 @@ class NavigationController extends GetxController
     this.currentindex.value = index;
     Get.offAllNamed(pages[index], id: 1);
   }
+
+  var selectedDate = DateTime.now().obs;
+  var now = DateFormat("dd-MM-yyyy").format(DateTime.now()).toString();
+  var isDataProcessing = false.obs;
 
   Route? onGenerateRoute(RouteSettings settings) {
     if (settings.name == Routes.HOME) {
@@ -116,7 +129,7 @@ class NavigationController extends GetxController
       context: Get.context!,
       initialDate: selectedDate.value,
       firstDate: DateTime(1900),
-      lastDate: DateTime(2030),
+      lastDate: DateTime.now(),
       //initialEntryMode: DatePickerEntryMode.input,
       // initialDatePickerMode: DatePickerMode.year,
       helpText: 'Date of Birth',
@@ -139,7 +152,6 @@ class NavigationController extends GetxController
   }
 
   dateOutput() {
-    var now = DateFormat("dd-MM-yyyy").format(DateTime.now()).toString();
     var selected =
         DateFormat("dd-MM-yyyy").format(selectedDate.value).toString();
     if (now != selected) {
@@ -151,6 +163,7 @@ class NavigationController extends GetxController
 
   addPatient() async {
     try {
+      isDataProcessing(true);
       await this
           .patient
           ?.addPatient(
@@ -164,10 +177,13 @@ class NavigationController extends GetxController
           Get.snackbar('Failed, try again', response.getError(),
               snackPosition: SnackPosition.TOP);
         } else {
+          isDataProcessing(false);
+          select.value = 0;
+          selectedDate.value = DateTime.now();
           Get.back();
           Get.snackbar('Patient Added', 'Patient Added Successfully',
               snackPosition: SnackPosition.TOP);
-          homecon.getPatient();
+          homecon.refreshList();
         }
       }, onError: (err) {
         Get.snackbar('Failed add Patient', err.toString(),
@@ -192,19 +208,21 @@ class NavigationController extends GetxController
   validateName(v) => v.length > 0 ? null : 'Please Fill This Field';
 
   List gender = [0, 1];
-  RxInt select = 0.obs;
+  var select = 0.obs;
 
-  changeGender(v) => this
-      .patient
-      ?.patientData
-      .update((patientData) => patientData?.patientGender = v);
+  changeGender(v) {
+    this
+        .patient
+        ?.patientData
+        .update((patientData) => patientData?.patientGender = v);
+  }
 
   defaultGender() {
-    if (this.patient?.patientData == null) {
+    if (select.value == 0) {
       this
           .patient
           ?.patientData
-          .update((patientData) => patientData?.patientGender = 1);
+          .update((patientData) => patientData?.patientGender = 0);
     }
   }
 

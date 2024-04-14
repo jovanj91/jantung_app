@@ -30,10 +30,10 @@ class HomeController extends GetxController {
   }
 
   getImage(index) {
-    if (listPatient[index]['gender'] == 0) {
-      return "assets/images/doodle2.png";
+    if (listPatient[index]['patientGender'] == 0) {
+      return "assets/images/man.png";
     } else {
-      return "assets/images/doodle3.png";
+      return "assets/images/woman.png";
     }
   }
 

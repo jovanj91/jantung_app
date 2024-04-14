@@ -36,29 +36,37 @@ class MyAlertDialog extends StatelessWidget {
   final controller = Get.find<NavigationController>();
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(20.0), // Adjust the radius as needed
-      ),
-      title: Text('Add Patient', textAlign: TextAlign.center),
-      actionsAlignment: MainAxisAlignment.center,
-      content: NewPatientForm(),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () async {
-            this.controller.defaultGender();
-            await this.controller.addPatient();
-          },
-          child: Text('OK'),
-        ),
-      ],
-    );
+    return Obx(() {
+      if (controller.isDataProcessing.value == true) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(20.0), // Adjust the radius as needed
+          ),
+          title: Text('Add Patient', textAlign: TextAlign.center),
+          actionsAlignment: MainAxisAlignment.center,
+          content: NewPatientForm(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                controller.defaultGender();
+                await controller.addPatient();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      }
+    });
   }
 }

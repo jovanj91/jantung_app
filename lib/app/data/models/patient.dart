@@ -31,4 +31,12 @@ class Patient {
 
     return data;
   }
+
+  void clearAllProperties() {
+    patientId = null;
+    patientName = null;
+    patientDob = null;
+    patientAge = null;
+    patientGender = null;
+  }
 }

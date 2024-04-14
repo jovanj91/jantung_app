@@ -31,4 +31,12 @@ class HeartCheck {
 
     return data;
   }
+
+  void clearAllProperties() {
+    id = null;
+    patientId = null;
+    checkedat = null;
+    checkresult = null;
+    videopath = null;
+  }
 }

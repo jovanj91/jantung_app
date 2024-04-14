@@ -89,39 +89,44 @@ class DetailsView extends GetView<DetailsController> {
                 ),
                 SizedBox(height: getProportionateScreenHeight(20)),
                 Expanded(
-                    child: RefreshIndicator( onRefresh : controller.refreshHistory, child:controller.listHistory.isEmpty
-                        ? Center(
-                            child: Text('No History Data Yet'),
-                          )
-                        : SingleChildScrollView(
-                            child: DataTable(
-                            columns: [
-                              DataColumn(
-                                  label: Text('No',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                              DataColumn(
-                                  label: Text('Check Result',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                              DataColumn(
-                                  label: Text('Date Checked',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                            ],
-                            rows: controller.listHistory
-                                .asMap()
-                                .entries
-                                .map((entry) {
-                              final datacount = entry.key + 1;
-                              final Map<String, dynamic> rowData = entry.value;
-                              return DataRow(cells: [
-                                DataCell(Text(datacount.toString())),
-                                DataCell(Text(rowData['checkResult'])),
-                                DataCell(Text(rowData['checkedAt'].toString())),
-                              ]);
-                            }).toList(),
-                          )))),
+                    child: RefreshIndicator(
+                        onRefresh: controller.refreshHistory,
+                        child: controller.listHistory.isEmpty
+                            ? Center(
+                                child: Text('No History Data Yet'),
+                              )
+                            : SingleChildScrollView(
+                                child: DataTable(
+                                columns: [
+                                  DataColumn(
+                                      label: Text('No',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))),
+                                  DataColumn(
+                                      label: Text('Check Result',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))),
+                                  DataColumn(
+                                      label: Text('Date Checked',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))),
+                                ],
+                                rows: controller.listHistory
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  final datacount = entry.key + 1;
+                                  final Map<String, dynamic> rowData =
+                                      entry.value;
+                                  return DataRow(cells: [
+                                    DataCell(Text(datacount.toString())),
+                                    DataCell(Text(
+                                        rowData['checkResult'].toString())),
+                                    DataCell(
+                                        Text(rowData['checkedAt'].toString())),
+                                  ]);
+                                }).toList(),
+                              )))),
               ])),
             );
           }

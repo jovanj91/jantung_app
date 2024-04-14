@@ -45,9 +45,9 @@ class DetailsController extends GetxController {
 
   getImage(gender) {
     if (gender == 0) {
-      return "assets/images/doodle2.png";
+      return "assets/images/man.png";
     } else {
-      return "assets/images/doodle3.png";
+      return "assets/images/woman.png";
     }
   }
 
