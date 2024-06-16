@@ -124,12 +124,14 @@ class DetailsController extends GetxController {
           if (VerifyError.verify(response)) {
             Get.snackbar('Failed, retrying', response.getError(),
                 snackPosition: SnackPosition.TOP);
+            detectEchocardiography();
           } else {
             isVideoUploading(false);
             isButtonDisabled(false);
             Get.back();
             Get.snackbar('File Uploaded', 'Heart Checked Successfully',
                 snackPosition: SnackPosition.TOP);
+            refreshHistory();
           }
         }, onError: (err) {
           Get.snackbar('Heart Check Failed ', err.toString(),

@@ -6,7 +6,7 @@ import 'package:jantung_app/app/data/models/app_error.dart';
 import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
 
-const baseUrl = 'http://192.168.100.89:8080';
+const baseUrl = 'http://54.179.197.144:8080';
 
 class MyApi extends GetConnect {
   login(email, password) async {
@@ -75,10 +75,10 @@ class MyApi extends GetConnect {
         (videoFile.lengthSync() / 1024) / duration.inSeconds; // Speed in Kbps
     print('Upload Speed: ${uploadSpeed.toStringAsFixed(2)} Kbps');
     if (res.statusCode >= 200) {
-        return res;
-      } else {
-        return AppError(errors: 'Failed to check heart');
-      }
+      return res;
+    } else {
+      return AppError(errors: 'Failed to check heart');
+    }
   }
 
   Future detectEchocardiography(File videoFile, patientId) async {

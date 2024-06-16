@@ -176,6 +176,7 @@ class NavigationController extends GetxController
         if (VerifyError.verify(response)) {
           Get.snackbar('Failed, try again', response.getError(),
               snackPosition: SnackPosition.TOP);
+          addPatient();
         } else {
           isDataProcessing(false);
           select.value = 0;
