@@ -30,7 +30,6 @@ class DetailsController extends GetxController {
   Rx<File?> selectedVideo = Rx<File?>(null);
   Rx<FilePickerResult?> video = Rx<FilePickerResult?>(null);
   Rx<List<Map<String, dynamic>>> fileList = Rx<List<Map<String, dynamic>>>([]);
-
   @override
   void onInit() async {
     this.patient = Get.find<PatientService>();
@@ -87,6 +86,12 @@ class DetailsController extends GetxController {
     getPatientHistory();
   }
 
+  Future<void> clearVideo() async {
+    selectedVideo = Rx<File?>(null);
+    video = Rx<FilePickerResult?>(null);
+    fileList = Rx<List<Map<String, dynamic>>>([]);
+  }
+
   Future<void> processVideo() async {
     try {
       video.value = await FilePicker.platform.pickFiles(
@@ -95,6 +100,36 @@ class DetailsController extends GetxController {
       // ignore: unnecessary_null_comparison
       if (video != null) {
         selectedVideo.value = File(video.value!.files.single.path.toString());
+        videoPlayerController =
+            VideoPlayerController.file(selectedVideo.value!);
+        // Initialize the video player controller
+        await videoPlayerController.initialize();
+        update();
+      } else {
+        print('User canceled file picking');
+      }
+    } catch (e) {
+      print('Error initializing video: $e');
+    }
+  }
+
+  Future<void> newestVideo() async {
+    try {
+      final videoDirPath = Directory('/storage/emulated/0/Movies');
+      print(videoDirPath);
+      if (!videoDirPath.existsSync()) {
+        return null;
+      }
+      final files = videoDirPath.listSync().whereType<File>().toList();
+
+      final videoFiles = files
+          .where((file) => file.path.endsWith('.mp4'))
+          .toList()
+        ..sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
+
+      // ignore: unnecessary_null_comparison
+      if (videoFiles != null) {
+        selectedVideo.value = videoFiles.first;
         videoPlayerController =
             VideoPlayerController.file(selectedVideo.value!);
         // Initialize the video player controller

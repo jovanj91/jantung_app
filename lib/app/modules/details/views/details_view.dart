@@ -65,15 +65,17 @@ class DetailsView extends GetView<DetailsController> {
                         ElevatedButton(
                           onPressed: () {
                             Get.defaultDialog(
-                              title: 'Heart Check',
-                              content: HeartCheckForm(),
-                              textConfirm: 'Ya',
-                              onConfirm: () async {
-                                controller.detectEchocardiography();
-                              },
-                              buttonColor: kPrimaryColor,
-                              textCancel: 'Tidak',
-                            );
+                                title: 'Heart Check',
+                                content: HeartCheckForm(),
+                                textConfirm: 'Ya',
+                                onConfirm: () async {
+                                  controller.detectEchocardiography();
+                                },
+                                buttonColor: kPrimaryColor,
+                                textCancel: 'Tidak',
+                                onCancel: () async {
+                                  controller.clearVideo();
+                                });
                           },
                           child: Text('Check'), // Empty child
                           style: ElevatedButton.styleFrom(

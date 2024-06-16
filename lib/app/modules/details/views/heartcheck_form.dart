@@ -15,7 +15,7 @@ class HeartCheckForm extends StatelessWidget {
     return Column(
       children: [
         Obx(() {
-          if (controller.video.value != null) {
+          if (controller.selectedVideo.value != null) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -67,7 +67,11 @@ class HeartCheckForm extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Text(controller.video.value?.files[0].name ?? '',
+                          Text(
+                              controller.selectedVideo.value?.path
+                                      .split('/')
+                                      .last ??
+                                  '',
                               style: const TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold))
                         ],
@@ -76,10 +80,16 @@ class HeartCheckForm extends StatelessWidget {
             );
           } else {
             return Center(
-              child: ElevatedButton(
-                onPressed: controller.processVideo,
-                child: const Text("Select Video"),
-              ),
+              child: Column(children: [
+                ElevatedButton(
+                  onPressed: controller.processVideo,
+                  child: const Text("Select Video"),
+                ),
+                ElevatedButton(
+                  onPressed: controller.newestVideo,
+                  child: const Text("Select Newest Video"),
+                ),
+              ]),
             );
           }
         }),
