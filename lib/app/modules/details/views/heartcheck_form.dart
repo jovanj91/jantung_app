@@ -73,7 +73,10 @@ class HeartCheckForm extends StatelessWidget {
                                       .last ??
                                   '',
                               style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))
+                                  fontSize: 14, fontWeight: FontWeight.bold)),
+                          ElevatedButton(
+                              onPressed: controller.trimVideo,
+                              child: const Text("Trim video"))
                         ],
                       ),
               ),
@@ -81,6 +84,10 @@ class HeartCheckForm extends StatelessWidget {
           } else {
             return Center(
               child: Column(children: [
+                ElevatedButton(
+                  onPressed: controller.openEchoApp,
+                  child: const Text("Capture with Ultrasound"),
+                ),
                 ElevatedButton(
                   onPressed: controller.processVideo,
                   child: const Text("Select Video"),

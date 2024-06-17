@@ -66,6 +66,10 @@ class DetailsView extends GetView<DetailsController> {
                           onPressed: () {
                             Get.defaultDialog(
                                 title: 'Heart Check',
+                                barrierDismissible: false,
+                                onCustom: () {
+                                  controller.clearVideo();
+                                },
                                 content: HeartCheckForm(),
                                 textConfirm: 'Ya',
                                 onConfirm: () async {

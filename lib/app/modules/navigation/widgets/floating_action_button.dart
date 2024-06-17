@@ -22,6 +22,7 @@ class CustomFloatingActionButton extends Container {
         controller.fabAnimationController.forward();
 
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return MyAlertDialog();

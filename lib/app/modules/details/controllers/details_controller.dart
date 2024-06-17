@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
 import 'package:jantung_app/app/data/services/preprocessing/service.dart';
+import 'package:jantung_app/app/modules/details/views/trimmer_view.dart';
 import 'package:jantung_app/core/utils/get_errors.dart';
 import 'package:video_player/video_player.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:video_trimmer/video_trimmer.dart';
 
 class DetailsController extends GetxController {
   //TODO: Implement DetailsController
@@ -30,6 +33,16 @@ class DetailsController extends GetxController {
   Rx<File?> selectedVideo = Rx<File?>(null);
   Rx<FilePickerResult?> video = Rx<FilePickerResult?>(null);
   Rx<List<Map<String, dynamic>>> fileList = Rx<List<Map<String, dynamic>>>([]);
+
+  final Trimmer _trimmer = Trimmer();
+  final RxDouble startValue = 0.0.obs;
+  final RxDouble endValue = 0.0.obs;
+  final RxBool isPlaying = false.obs;
+  final RxBool progressVisibility = false.obs;
+  var trimmedVideoPath = ''.obs;
+
+  Trimmer get trimmer => _trimmer;
+
   @override
   void onInit() async {
     this.patient = Get.find<PatientService>();
@@ -90,6 +103,21 @@ class DetailsController extends GetxController {
     selectedVideo = Rx<File?>(null);
     video = Rx<FilePickerResult?>(null);
     fileList = Rx<List<Map<String, dynamic>>>([]);
+    startValue.value = 0.0;
+    endValue.value = 0.0;
+    isPlaying.value = false;
+    progressVisibility.value = false;
+    trimmedVideoPath.value = '';
+    _trimmer.dispose();
+  }
+
+  Future<void> openEchoApp() async {
+    const url = 'whatsapp://send?phone=255634523';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      Get.snackbar('Not installed', 'Wireless USG not installed');
+    }
   }
 
   Future<void> processVideo() async {
@@ -202,6 +230,48 @@ class DetailsController extends GetxController {
     }
   }
 
+  trimVideo() async {
+    Get.to(TrimmerView(selectedVideo.value!));
+  }
+
+  void loadVideo(File videoFile) {
+    _trimmer.loadVideo(videoFile: videoFile);
+  }
+
+  void setTrimmedVideoPath(String path) {
+    trimmedVideoPath.value = path;
+  }
+
+  void saveVideo() {
+    progressVisibility.value = true;
+    _trimmer.saveTrimmedVideo(
+      startValue: startValue.value,
+      endValue: endValue.value,
+      onSave: (outputPath) {
+        progressVisibility.value = false;
+        setTrimmedVideoPath(outputPath!);
+        final snackBar = SnackBar(
+          content: Text('Video Saved successfully\n$outputPath'),
+        );
+        ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+        // videoPlayerController = VideoPlayerController.file(File(outputPath));
+        // // Initialize the video player controller
+        // await videoPlayerController.initialize();
+        // update();
+        Get.back();
+      },
+    );
+  }
+
+  Future<bool> videoPlaybackControl() async {
+    final playbackState = await _trimmer.videoPlaybackControl(
+      startValue: startValue.value,
+      endValue: endValue.value,
+    );
+    isPlaying.value = playbackState;
+    return playbackState;
+  }
+
   @override
   void onReady() {
     super.onReady();
@@ -209,6 +279,7 @@ class DetailsController extends GetxController {
 
   @override
   void onClose() {
+    _trimmer.dispose();
     super.onClose();
   }
 }
