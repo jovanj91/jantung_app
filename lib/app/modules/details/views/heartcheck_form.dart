@@ -74,9 +74,9 @@ class HeartCheckForm extends StatelessWidget {
                                   '',
                               style: const TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold)),
-                          ElevatedButton(
-                              onPressed: controller.trimVideo,
-                              child: const Text("Trim video"))
+                          // ElevatedButton(
+                          //     onPressed: controller.trimVideo,
+                          //     child: const Text("Trim video"))
                         ],
                       ),
               ),

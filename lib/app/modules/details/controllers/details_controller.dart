@@ -10,6 +10,10 @@ import 'package:jantung_app/core/utils/get_errors.dart';
 import 'package:video_player/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_trimmer/video_trimmer.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:device_apps/device_apps.dart';
+// ignore: unused_import
+import 'package:android_intent_plus/flag.dart';
 
 class DetailsController extends GetxController {
   //TODO: Implement DetailsController
@@ -111,12 +115,27 @@ class DetailsController extends GetxController {
     _trimmer.dispose();
   }
 
+  void _sendBroadcast() {
+    const intent = AndroidIntent(
+      action: 'com.example.broadcast',
+    );
+    intent.launch();
+  }
+
   Future<void> openEchoApp() async {
-    const url = 'whatsapp://send?phone=255634523';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+    const url =
+        'https://play.google.com/store/apps/details?id=com.sonostar.wirelessusg';
+    // const intent = AndroidIntent(action: 'action_view', package: '');
+    bool isInstalled =
+        await DeviceApps.isAppInstalled('com.sonostar.wirelessusg');
+
+    if (isInstalled) {
+      print('executed');
+      DeviceApps.openApp('com.sonostar.wirelessusg');
+      // intent.launch();
     } else {
       Get.snackbar('Not installed', 'Wireless USG not installed');
+      await launchUrl(Uri.parse(url));
     }
   }
 
@@ -231,7 +250,7 @@ class DetailsController extends GetxController {
   }
 
   trimVideo() async {
-    Get.to(TrimmerView(selectedVideo.value!));
+    await Get.to(() => TrimmerView(selectedVideo.value!));
   }
 
   void loadVideo(File videoFile) {
