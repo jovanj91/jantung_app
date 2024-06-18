@@ -70,7 +70,33 @@ class DetailsView extends GetView<DetailsController> {
                                 content: HeartCheckForm(),
                                 textConfirm: 'Ya',
                                 onConfirm: () async {
-                                  controller.detectEchocardiography();
+                                  Get.defaultDialog(
+                                      title: 'Next Step',
+                                      content: Text(
+                                          'Echocardiography detected. Choose Process'),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            controller
+                                                .detectEchocardiography(2);
+                                            Get.back();
+                                          },
+                                          child: Text('Process 1'),
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: kPrimaryColor),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // Handle cancel action for the second dialog
+                                            controller
+                                                .detectEchocardiography(1);
+                                            Get.back();
+                                          },
+                                          child: Text('Process 2'),
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: kPrimaryColor),
+                                        ),
+                                      ]);
                                 },
                                 buttonColor: kPrimaryColor,
                                 textCancel: 'Tidak',

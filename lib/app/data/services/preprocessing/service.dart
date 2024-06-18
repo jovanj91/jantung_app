@@ -18,8 +18,8 @@ class PreprocessingService extends GetxService {
     return data;
   }
 
-  detectEchocardiography(File video, patientId) async {
-    var data = await repository?.detectEchocardiography(video, patientId);
+  detectEchocardiography(File video, patientId, processId) async {
+    var data = await repository?.detectEchocardiography(video, patientId, processId);
     return data;
   }
 

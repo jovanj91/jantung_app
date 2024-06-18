@@ -85,7 +85,7 @@ class MyApi extends GetConnect {
     }
   }
 
-  Future detectEchocardiography(File videoFile, patientId) async {
+  Future detectEchocardiography(File videoFile, patientId, processId) async {
     AuthService auth = Get.find<AuthService>();
     final Map<String, String> headers = {
       'Authentication-Token': auth.token.value,
@@ -108,6 +108,7 @@ class MyApi extends GetConnect {
       );
       request.headers.addAll(headers);
       request.fields['patient_id'] = patientId.toString();
+      request.fields['process_id'] = processId.toString();
       var response = await request.send();
       if (response.statusCode >= 200 && response.statusCode <= 299) {
         return response;

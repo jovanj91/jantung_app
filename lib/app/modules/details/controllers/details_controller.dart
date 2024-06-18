@@ -192,7 +192,7 @@ class DetailsController extends GetxController {
 
   var isButtonDisabled = false.obs;
 
-  detectEchocardiography() async {
+  detectEchocardiography(processId) async {
     try {
       if (!isButtonDisabled.value) {
         isButtonDisabled(true);
@@ -200,13 +200,13 @@ class DetailsController extends GetxController {
         await this
             .preprocessing
             ?.detectEchocardiography(selectedVideo.value!,
-                this.patient?.patientHistory.value.patientId)
+                this.patient?.patientHistory.value.patientId, processId)
             .then((response) {
           print(response);
           if (VerifyError.verify(response)) {
             Get.snackbar('Failed, retrying', response.getError(),
                 snackPosition: SnackPosition.TOP);
-            detectEchocardiography();
+            detectEchocardiography(processId);
           } else {
             isVideoUploading(false);
             isButtonDisabled(false);
@@ -214,6 +214,7 @@ class DetailsController extends GetxController {
             Get.snackbar('File Uploaded', 'Heart Checked Successfully',
                 snackPosition: SnackPosition.TOP);
             refreshHistory();
+            clearVideo();
           }
         }, onError: (err) {
           Get.snackbar('Heart Check Failed ', err.toString(),
