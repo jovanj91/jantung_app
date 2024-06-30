@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jantung_app/app/modules/details/views/heartcheck_form.dart';
+import 'package:jantung_app/app/modules/details/views/video_player.dart';
 import 'package:jantung_app/core/utils/size_config.dart';
 import 'package:jantung_app/core/values/constant.dart';
 
@@ -139,6 +140,10 @@ class DetailsView extends GetView<DetailsController> {
                                       label: Text('Date Checked',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold))),
+                                  DataColumn(
+                                      label: Text('Result Video',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))),
                                 ],
                                 rows: controller.listHistory
                                     .asMap()
@@ -153,6 +158,19 @@ class DetailsView extends GetView<DetailsController> {
                                         rowData['checkResult'].toString())),
                                     DataCell(
                                         Text(rowData['checkedAt'].toString())),
+                                    DataCell(
+                                      ElevatedButton.icon(
+                                          onPressed: () {
+                                            Get.to(() => VideoPlayerPage(),
+                                                arguments: {
+                                                  'videoUrl':
+                                                      rowData['videoPath']
+                                                          .toString()
+                                                });
+                                          },
+                                          icon: const Icon(Icons.play_arrow),
+                                          label: Text('')),
+                                    ),
                                   ]);
                                 }).toList(),
                               )))),

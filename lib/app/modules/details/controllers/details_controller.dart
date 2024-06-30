@@ -219,11 +219,17 @@ class DetailsController extends GetxController {
         }, onError: (err) {
           Get.snackbar('Heart Check Failed ', err.toString(),
               snackPosition: SnackPosition.TOP);
+          Get.back();
+          refreshHistory();
+          clearVideo();
         });
       }
     } catch (e) {
       Get.snackbar('Heart Check Failed', e.toString(),
           snackPosition: SnackPosition.TOP);
+      Get.back();
+      refreshHistory();
+      clearVideo();
     }
   }
 
