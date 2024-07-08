@@ -7,10 +7,10 @@ import 'package:jantung_app/app/data/services/auth/service.dart';
 import 'package:jantung_app/app/data/services/patient/service.dart';
 
 //AWS API
-// const baseUrl = 'http://54.179.197.144:8080';
+const baseUrl = 'http://54.179.197.144:8080';
 
 //localTesting
-const baseUrl = 'http://192.168.100.93:8080';
+// const baseUrl = 'http://192.168.100.93:8080';
 
 class MyApi extends GetConnect {
   login(email, password) async {

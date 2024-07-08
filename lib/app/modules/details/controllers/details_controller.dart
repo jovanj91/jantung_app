@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,6 +37,9 @@ class DetailsController extends GetxController {
   RxBool isPlayed = false.obs;
   RxBool isVideoUploading = false.obs;
   Rx<File?> selectedVideo = Rx<File?>(null);
+  Rx<File?> convertedVideo = Rx<File?>(null);
+  RxString videoPath = ''.obs;
+  RxString outputPath = ''.obs;
   Rx<FilePickerResult?> video = Rx<FilePickerResult?>(null);
   Rx<List<Map<String, dynamic>>> fileList = Rx<List<Map<String, dynamic>>>([]);
 
@@ -105,6 +110,9 @@ class DetailsController extends GetxController {
 
   Future<void> clearVideo() async {
     selectedVideo = Rx<File?>(null);
+    convertedVideo = Rx<File?>(null);
+    outputPath.value = '';
+    videoPath.value = '';
     video = Rx<FilePickerResult?>(null);
     fileList = Rx<List<Map<String, dynamic>>>([]);
     startValue.value = 0.0;
@@ -139,6 +147,19 @@ class DetailsController extends GetxController {
     }
   }
 
+  Future<void> convertVideo(String inputPath, String outputPath) async {
+    final String command = '-i "$inputPath" "$outputPath"';
+
+    await FFmpegKit.execute(command).then((session) async {
+      final returnCode = await session.getReturnCode();
+      if (ReturnCode.isSuccess(returnCode)) {
+        print('Conversion successful');
+      } else {
+        print('Conversion failed with return code $returnCode');
+      }
+    });
+  }
+
   Future<void> processVideo() async {
     try {
       video.value = await FilePicker.platform.pickFiles(
@@ -146,9 +167,13 @@ class DetailsController extends GetxController {
       );
       // ignore: unnecessary_null_comparison
       if (video != null) {
-        selectedVideo.value = File(video.value!.files.single.path.toString());
+        videoPath.value = video.value!.files.single.path.toString();
+        selectedVideo.value = File(videoPath.value);
+        outputPath.value = videoPath.value.replaceAll('.avi', '.mp4');
+        convertVideo(videoPath.value, outputPath.value);
+        convertedVideo.value = File(outputPath.value);
         videoPlayerController =
-            VideoPlayerController.file(selectedVideo.value!);
+            VideoPlayerController.file(convertedVideo.value!);
         // Initialize the video player controller
         await videoPlayerController.initialize();
         update();
@@ -170,7 +195,7 @@ class DetailsController extends GetxController {
       final files = videoDirPath.listSync().whereType<File>().toList();
 
       final videoFiles = files
-          .where((file) => file.path.endsWith('.mp4'))
+          .where((file) => file.path.endsWith('.avi'))
           .toList()
         ..sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
 
